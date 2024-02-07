@@ -1,15 +1,9 @@
 import './App.css'
 import {Button} from "@material-tailwind/react";
+import Router from "./components/routes/Router.jsx";
 
 function App() {
-
-  return (
-    <><Button>Button</Button>
-        <h1 className="text-3xl font-bold underline">
-            Hello world!
-        </h1>
-    </>
-  )
+  return <Router />;
 }
 
 export default App
