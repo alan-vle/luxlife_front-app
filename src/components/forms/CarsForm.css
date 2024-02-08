@@ -1,0 +1,6 @@
+.selected-element {
+    background-image: linear-gradient(to right, transparent 0%, transparent 2px, #000 2px, #000 100%);
+    background-position: bottom;
+    background-repeat: repeat-x;
+    background-size: 100% 2px;
+}
