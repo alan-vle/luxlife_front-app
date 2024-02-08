@@ -7,52 +7,29 @@ import {
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {Link} from "react-router-dom";
-
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCircleUser} from "@fortawesome/free-regular-svg-icons";
+import luxlifeLogo from "../../assets/luxlife_logo.png";
 function NavList() {
     return (
-        <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:gap-6">
-            <div className={"flex items-start"}>
+        <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
                 <Typography
                     as="a"
-                    href="#"
                     variant="h6"
-                    className="mr-4 cursor-pointer py-1.5"
+                    className="cursor-pointer py-1.5"
                 >
                     <Link to="/agencies" className="flex items-center hover:text-blue-500 transition-colors">
                         Nos agences
                     </Link>
                 </Typography>
+                <div className={"py-1.5 font-bold"}>|</div>
                 <Typography
                     as="a"
-                    href="#"
                     variant="h6"
-                    className="mr-4 cursor-pointer py-1.5"
+                    className=" cursor-pointer py-1.5"
                 >
                     <Link to="/about-us" className="flex items-center hover:text-blue-500 transition-colors">A propos</Link>
                 </Typography>
-            </div>
-            <div className={"flex items-start"}>
-                <Typography
-                    as="li"
-                    variant="small"
-                    color="blue-gray"
-                    className="p-1 font-medium"
-                >
-                    <Link to={"login"} className="flex items-center hover:text-blue-500 transition-colors">
-                        Connexion
-                    </Link>
-                </Typography>
-                <Typography
-                    as="li"
-                    variant="small"
-                    color="blue-gray"
-                    className="p-1 font-medium"
-                >
-                    <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
-                        Inscription
-                    </Link>
-                </Typography>
-            </div>
         </ul>
     );
 }
@@ -72,10 +49,35 @@ function NavbarSimple() {
     }, []);
 
     return (
-        <Navbar className="mx-auto w-full">
-            <div className="justify-between text-blue-gray-900">
+        <Navbar className="mx-auto px-6 py-3" fullWidth={true}>
+            <div className="flex items-center justify-between text-blue-gray-900">
                 <div className="hidden lg:block">
                     <NavList />
+                </div>
+                <div className="hidden gap-1 lg:flex items-center justify-center">
+                    <img src={luxlifeLogo} alt="Luxlife logo" className="w-[200px] h-[150px] overflow-hidden absolute"/>
+                </div>
+                <div className="hidden gap-2 lg:flex">
+                    <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
+                    <Typography
+                        as="a"
+                        variant="h6"
+                        className="cursor-pointer py-1.5"
+                    >
+                        <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
+                            Connexion
+                        </Link>
+                    </Typography>
+                    <div className={"py-1.5 font-bold"}>|</div>
+                    <Typography
+                        as="a"
+                        variant="h6"
+                        className="cursor-pointer py-1.5"
+                    >
+                        <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
+                            Inscription
+                        </Link>
+                    </Typography>
                 </div>
                 <IconButton
                     variant="text"
