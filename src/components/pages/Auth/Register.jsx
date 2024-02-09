@@ -7,9 +7,11 @@ import {
 } from "@material-tailwind/react";
 import "./Register.css"
 import {OneFieldPassword} from "@/utils/Password.jsx";
-import {useState} from "react";
-import {faCircleXmark} from "@fortawesome/free-solid-svg-icons";
+import {useRef, useState} from "react";
+import {faCircleCheck, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {toast} from "react-toastify";
+import {RegisterService} from "@/service/AuthentificationService.jsx";
 
 function IconOutlined() {
     return (
@@ -49,23 +51,73 @@ function IconSolid() {
 
 export function Register() {
     const [fullName, setFullName] = useState(null);
+    const [fullNameIsValid, setFullNameIsValid] = useState(false);
+    const [fullNameIsNotValid, setFullNameIsNotValid] = useState(false);
     const [email, setEmail] = useState(null);
+    const [emailIsValid, setEmailIsValid] = useState(false);
+    const [emailIsNotValid, setEmailIsNotValid] = useState(false);
     const [address, setAddress] = useState(null);
+    const [addressIsValid, setAddressIsValid] = useState(false);
+    const [addressIsNotValid, setAddressIsNotValid] = useState(false);
     const [birthDate, setBirthDate] = useState(null);
     const [password, setPassword] = useState(null);
+    const [passwordIsValid, setPasswordIsValid] = useState(false)
+    const [passwordIsNotValid, setPasswordIsNotValid] = useState(false)
     const [confirmPassword, setConfirmPassword] = useState(null);
+    const [confirmPasswordIsValid, setConfirmPasswordIsValid] = useState(false)
+    const [confirmPasswordIsNotValid, setConfirmPasswordIsNotValid] = useState(false)
+    const [visiblePasswordTooltips, setVisiblePasswordTooltips] = useState(false);
     const [passwordLength, setPasswordLength] = useState(false);
     const [passwordLowUp, setPasswordLowUp] = useState(false);
-    const [passwordSymb, setPasswordSymb] = useState(false);
+    const [passwordSymbol, setPasswordSymbol] = useState(false);
+
+    const fullNameHandler = (e) => {
+        fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid)
+    }
+    const emailHandler = (e) => {
+        emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid)
+    }
+
+    const addressHandler = (e) => {
+        addressValidator(e, setAddress, setAddressIsValid, setAddressIsNotValid)
+    }
+    const passwordHandler = (e) => {
+        passwordValidator(
+            e, setPassword, setPasswordIsValid, setPasswordIsNotValid,
+            setPasswordLength, setPasswordLowUp, setPasswordSymbol
+        )
+    }
+
+    const confirmPasswordHandler = (e) => {
+       confirmPasswordValidator(
+           e, password, passwordIsValid, setConfirmPassword,
+           setConfirmPasswordIsValid, setConfirmPasswordIsNotValid
+       )
+    }
+
+    const submitHandler = () => {
+        if(fullNameIsValid && emailIsValid && addressIsValid && birthDate && passwordIsValid && confirmPasswordIsValid) {
+            const registerData = {
+                "fullName": fullName,
+                "email": email,
+                "address": address,
+                "birthDate": birthDate,
+                "plainPassword": password,
+                "phoneNumber": "697562658"
+            }
+
+            RegisterService(registerData)
+        } else {
+            toast.error("Remplissez le formulaire correctement.", {
+                position: "top-center"
+            });
+        }
+
+    }
+
     return (
         <div className={"grid grid-cols-12 mt-28 mb-28"}>
-            Nom: {fullName} <br />
-            Email : {email} <br />
-            Address: {address} <br />
-            Birthdate : {birthDate} <br />
-            Pass : {password} <br />
-           Conf pass:  {confirmPassword} <br />
-            <div className={"col-span-3"}></div>
+            <div className={"col-span-3"}>{password}</div>
             <div className={"col-span-6 flex justify-center w-full h-auto"}>
                 <Card>
                     <CardBody>
@@ -73,17 +125,23 @@ export function Register() {
                         <div className={"grid grid-cols-2 gap-2 mt-8 placeholder:text-slate-400"}>
                             <div className={"mb-4 "}>
                                 <Input label={"Votre nom"} placeholder={"Ex : Jon Jony"}
-                                       onChange={(e) => setFullName(e.target.value)}
+                                       onChange={fullNameHandler}
+                                       success={fullNameIsValid}
+                                       error={fullNameIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
                                 <Input label={"Votre email"} placeholder={"Ex : jon-jony13@gmail.com"}
-                                       onChange={(e) => setEmail(e.target.value)}
+                                       onChange={emailHandler}
+                                       success={emailIsValid}
+                                       error={emailIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
                                 <Input label={"Votre adresse"} placeholder={"Ex : 12 rue des champignons, 13002 Marseille"}
-                                       onChange={(e) => setAddress(e.target.value)}
+                                       onChange={addressHandler}
+                                       success={addressIsValid}
+                                       error={addressIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
@@ -93,45 +151,56 @@ export function Register() {
                             </div>
 
                             <div className={"mb-4"}>
-                                <OneFieldPassword onChange={(e) => setPassword(e.target.value)}/>
+                                <OneFieldPassword
+                                    onChange={passwordHandler}
+                                    onFocus={() => setVisiblePasswordTooltips(true)}
+                                    onBlur={() => setVisiblePasswordTooltips(false)}
+                                    success={passwordIsValid}
+                                    error={passwordIsNotValid}
+                                />
                             </div>
                             <div className={"mb-4"}>
                                 <OneFieldPassword label={"Confirmez votre mot de passe"}
-                                      onChange={(e) => setConfirmPassword(e.target.value)}
+                                      onChange={confirmPasswordHandler}
+                                      success={confirmPasswordIsValid}
+                                      error={confirmPasswordIsNotValid}
                                 />
                             </div>
-                            <div className={"col-span-2"}>
-                                <Alert variant="outlined" icon={<IconSolid />}>
-                                    <Typography className="font-medium">
-                                       Votre mot de passe doit être conforme a ces règles:
-                                    </Typography>
-                                    <ul className="mt-2 ml-2 list-inside list-disc">
-                                        <li>Au moins 10 caractères.&nbsp;
-                                            {!passwordLength ?
-                                                <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
-                                                : <FontAwesomeIcon icon="fa-solid fa-circle-check" style={{color: "#10c400",}}
-                                                />
-                                            }
-                                        </li>
-                                        <li>
-                                            Une minuscule, une majuscule.&nbsp;
-                                            {!passwordLowUp ?
-                                                <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
-                                                : <FontAwesomeIcon icon="fa-solid fa-circle-check" style={{color: "#10c400",}}
-                                                />
-                                            }
-                                        </li>
-                                        <li>Et utiliser ces symboles : ! @ # ? &nbsp;
-                                            {!passwordSymb ?
-                                                <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
-                                                : <FontAwesomeIcon icon="fa-solid fa-circle-check" style={{color: "#10c400",}}
-                                                />
-                                            }
-                                        </li>
-                                    </ul>
-                                </Alert>
-                            </div>
+                            {visiblePasswordTooltips && (
+                                <div className={"col-span-2"}>
+                                    <Alert variant="outlined" icon={<IconSolid />}>
+                                        <Typography className="font-medium">
+                                            Votre mot de passe doit être conforme a ces règles:
+                                        </Typography>
+                                        <ul className="mt-2 ml-2 list-inside list-disc">
+                                            <li>Au moins 10 caractères.&nbsp;
+                                                {!passwordLength ?
+                                                    <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
+                                                    : <FontAwesomeIcon icon={faCircleCheck}  style={{color: "#10c400",}} />
+                                                }
+                                            </li>
+                                            <li>
+                                                Une minuscule, une majuscule.&nbsp;
+                                                {!passwordLowUp ?
+                                                    <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
+                                                    : <FontAwesomeIcon icon={faCircleCheck} style={{color: "#10c400",}}/>
+                                                }
+                                            </li>
+                                            <li>Et utiliser ces symboles : ! @ # ? &nbsp;
+                                                {!passwordSymbol ?
+                                                    <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
+                                                    : <FontAwesomeIcon icon={faCircleCheck}  style={{color: "#10c400",}}/>
+                                                }
+                                            </li>
+                                        </ul>
+                                    </Alert>
+                                </div>
+                            )}
 
+
+                        </div>
+                        <div className={"col-span-2 flex place-content-center mt-2"}>
+                            <Button type={"button"} onClick={submitHandler}>S'inscrire</Button>
                         </div>
                     </CardBody>
                 </Card>
@@ -141,4 +210,118 @@ export function Register() {
         );
 }
 
+function fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid) {
+    const fullNameValue = e.target.value
+    const frFullNameRegex = /^[a-zA-ZÀ-ÿ\-\' ]+$/;
+
+    if(fullNameValue.length >= 2 && frFullNameRegex.test(fullNameValue)) {
+        setFullName(fullNameValue)
+        setFullNameIsValid(true)
+        setFullNameIsNotValid(false)
+    } else {
+        setFullName(null)
+        setFullNameIsValid(false)
+        setFullNameIsNotValid(true)
+    }
+}
+
+function emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid) {
+    const emailValue = e.target.value
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(emailRegex.test(emailValue)) {
+        setEmail(emailValue)
+        setEmailIsValid(true)
+        setEmailIsNotValid(false)
+    } else {
+        setEmail(null)
+        setEmailIsValid(false)
+        setEmailIsNotValid(true)
+    }
+}
+
+function addressValidator(e, setAddress, setAddressIsValid, setAddressIsNotValid) {
+    const addressValue = e.target.value
+    const addressRegex = /^[0-9]+(?:[ ,.-][a-zA-ZÀ-ÿ0-9]+)+ (?:[0-9]{5}(?:-[0-9]{4})?|(?:[0-9]{5}(?:-[0-9]{4})? [a-zA-ZÀ-ÿ0-9]+))$/;
+    if(addressRegex.test(addressValue)) {
+        setAddress(addressValue)
+        setAddressIsValid(true)
+        setAddressIsNotValid(false)
+    } else {
+        setAddress(null)
+        setAddressIsValid(false)
+        setAddressIsNotValid(true)
+    }
+}
+
+function passwordValidator(e, setPassword, setPasswordIsValid, setPasswordIsNotValid, setPasswordLength, setPasswordLowUp, setPasswordSymbol) {
+    const passwordValue = e.target.value
+    const isCorrectLength = has10Carac(passwordValue, setPasswordLength)
+    const isLowerAndUpper = hasLowerAndUpperCarac(passwordValue, setPasswordLowUp)
+    const isSymbol = containsSpecialSymbols(passwordValue, setPasswordSymbol)
+
+    if(isCorrectLength && isLowerAndUpper && isSymbol) {
+        setPassword(passwordValue)
+        setPasswordIsValid(true)
+        setPasswordIsNotValid(false)
+    } else {
+        setPassword(passwordValue)
+        setPasswordIsValid(false)
+        setPasswordIsNotValid(true)
+    }
+}
+
+function confirmPasswordValidator(e, password, passwordIsValid, setConfirmPassword, setConfirmPasswordIsValid, setConfirmPasswordIsNotValid) {
+    const confirmPasswordValue = e.target.value
+
+    if(confirmPasswordValue === password && passwordIsValid) {
+        setConfirmPassword(confirmPasswordValue)
+        setConfirmPasswordIsValid(true)
+        setConfirmPasswordIsNotValid(false)
+    } else {
+        setConfirmPassword(null)
+        setConfirmPasswordIsValid(false)
+        setConfirmPasswordIsNotValid(true)
+    }
+}
+
+function has10Carac(passwordValue, setPasswordLength) {
+    if(passwordValue.length >= 10) {
+        setPasswordLength(true)
+
+        return true;
+    } else {
+        setPasswordLength(false)
+
+        return false;
+    }
+}
+function hasLowerAndUpperCarac(passwordValue, setPasswordLowUp) {
+    const lowerCaracRegex = /[A-Z]/;
+    const UpperCaracRegex = /[a-z]/;
+
+    if(lowerCaracRegex.test(passwordValue) && UpperCaracRegex.test(passwordValue)) {
+        setPasswordLowUp(true)
+
+        return true;
+    } else {
+        setPasswordLowUp(false)
+
+        return false;
+    }
+}
+
+
+function containsSpecialSymbols(passwordValue, setPasswordSymbol) {
+    const symbolsRegex = /[!@#?]/;
+    if(symbolsRegex.test(passwordValue)) {
+        setPasswordSymbol(true)
+
+        return true;
+    } else {
+        setPasswordSymbol(false)
+
+        return false;
+    }
+}
 export default Register;
