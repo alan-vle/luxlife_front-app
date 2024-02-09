@@ -1,0 +1,14 @@
+name: luxlife
+services:
+  node:
+    image: node:alpine
+    container_name: ${COMPOSE_PROJECT_NAME}_dev_node
+    entrypoint: /bin/sh
+    ports:
+      - 8000:8000
+    working_dir: /srv/${COMPOSE_PROJECT_NAME}
+    volumes:
+      - type: bind
+        source: ./
+        target: /srv/${COMPOSE_PROJECT_NAME}
+    tty: true

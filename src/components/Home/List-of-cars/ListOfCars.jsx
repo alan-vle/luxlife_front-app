@@ -4,6 +4,7 @@ import {faCircleChevronLeft, faCircleChevronRight} from "@fortawesome/free-solid
 import {useEffect, useState} from "react";
 import {getAllCars} from "@/service/CarsService.jsx";
 import ImageAndTextLoader from "@/components/Loader/ImageAndTextLoader.jsx";
+import Cars from "@/components/Cars/Cars.jsx";
 
 const ListOfCars = ({additionalContent}) => {
     const [cars, setCars] = useState([]);
@@ -16,33 +17,7 @@ const ListOfCars = ({additionalContent}) => {
         return await getAllCars();
     }
 
-    return(
-       <div className={"grid grid-cols-8 gap-4"}>
-           <div className={"flex items-center"}><FontAwesomeIcon icon={faCircleChevronLeft} size={"2xl"}/></div>
-           {cars.length === 0 ? <ImageAndTextLoader /> : (
-               <>
-                   {cars.map(car => (
-                       <div key={car.id} className={"col-span-2"}>
-                           <Card>
-                               <CardBody>
-                                   <src src={""} alt={"Car image"} />
-                                   <Typography as={"h4"} className={"font-semibold"}>
-                                       {car.manufacturer.name} {car.model}
-                                   </Typography>
-                                   <Typography as={"paragraph"}>{car.kilometers} kms</Typography>
-                                   {null !== additionalContent && (
-                                        <Button type={"button"}>Choisir</Button>
-                                   )}
-                               </CardBody>
-                           </Card>
-                       </div>
-                   ))}
-               </>
-           )
-           }
-           <div className={"flex items-center ml-24"}><FontAwesomeIcon icon={faCircleChevronRight} size={"2xl"}/></div>
-       </div>
-    )
+    return<Cars cars={cars} />;
 }
 
 export default ListOfCars;

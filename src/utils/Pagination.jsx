@@ -53,7 +53,7 @@ function Pagination({pageMax}) {
                 variant="text"
                 className="flex items-center gap-2"
                 onClick={next}
-                disabled={active === 5}
+                disabled={active === pageMax}
             >
                 Suivant
                 <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />
