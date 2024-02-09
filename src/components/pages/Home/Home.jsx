@@ -1,12 +1,12 @@
-import carBackgroundHome from "../../assets/car_background_home.jpg"
-import Review from "../Review/Review.jsx";
-import CarsForm from "../Home/Rental/RentalForm.jsx";
+import carBackgroundHome from "../../../assets/car_background_home.jpg"
+import Review from "../../Review/Review.jsx";
+import CarsForm from "../../Home/Rental/RentalForm.jsx";
 import {Button, Card, CardBody, CardHeader} from "@material-tailwind/react";
-import carImage from "../../assets/button-car.png";
-import trafficJamImage from "../../assets/traffic-jam.png";
+import carImage from "../../../assets/button-car.png";
+import trafficJamImage from "../../../assets/traffic-jam.png";
 import {useState} from "react";
-import RentalForm from "../Home/Rental/RentalForm.jsx";
-import ListOfCars from "../Home/List-of-cars/ListOfCars.jsx";
+import RentalForm from "../../Home/Rental/RentalForm.jsx";
+import ListOfCars from "../../Home/List-of-cars/ListOfCars.jsx";
 
 const Home = () => {
     const [content, setContent] = useState('form');
@@ -50,9 +50,7 @@ const Home = () => {
                             </Button>
                         </div>
                     </CardHeader>
-                    <CardBody>
-                        {content === 'form' ? <RentalForm /> : <ListOfCars />}
-                    </CardBody>
+                    <CardBody>{content === 'form' ? <RentalForm /> : <ListOfCars />}</CardBody>
                 </Card>
             </div>
         </div>
