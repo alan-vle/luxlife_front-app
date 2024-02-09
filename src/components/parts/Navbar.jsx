@@ -54,8 +54,10 @@ function NavbarSimple() {
                 <div className="hidden lg:block">
                     <NavList />
                 </div>
-                <div className="hidden gap-1 lg:flex items-center justify-center">
-                    <img src={luxlifeLogo} alt="Luxlife logo" className="w-[200px] h-[150px] overflow-hidden absolute"/>
+                <div className="hidden lg:flex items-center justify-center">
+                    <Link to="/" className={"w-[200px] h-[150px] absolute"}>
+                        <img src={luxlifeLogo} alt="Luxlife logo" className=""/>
+                    </Link>
                 </div>
                 <div className="hidden gap-2 lg:flex">
                     <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
@@ -92,8 +94,28 @@ function NavbarSimple() {
                     )}
                 </IconButton>
             </div>
-            <Collapse open={openNav}>
+            <Collapse open={openNav} className={"text-blue-gray-900"}>
                 <NavList />
+                <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
+                <Typography
+                    as="a"
+                    variant="h6"
+                    className="cursor-pointer py-1.5"
+                >
+                    <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
+                        Connexion
+                    </Link>
+                </Typography>
+                <div className={"py-1.5 font-bold"}>|</div>
+                <Typography
+                    as="a"
+                    variant="h6"
+                    className="cursor-pointer py-1.5"
+                >
+                    <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
+                        Inscription
+                    </Link>
+                </Typography>
             </Collapse>
         </Navbar>
     );

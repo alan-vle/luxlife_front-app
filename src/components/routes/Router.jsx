@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PrivateRoutes from './PrivateRoutes';
 import NotFound from "../pages/NotFound.jsx";
 import Login from "../pages/Auth/Login.jsx";
-import Home from "../pages/Home.jsx";
+import Home from "../pages/Home/Home.jsx";
 import BasketProvider from "../store/BasketContext.jsx";
 import Header from "../parts/Header.jsx";
 import Register from "../pages/Auth/Register.jsx";
@@ -11,6 +11,7 @@ import ResetPassword from "../pages/ResetPassword.jsx";
 import About from "../pages/About.jsx";
 import Footer from "../parts/Footer.jsx";
 import Agencies from "../pages/Agencies.jsx";
+import CarsFound from "@/components/pages/Rental/CarsFound.jsx";
 
 const Router = () => {
     return (
@@ -24,6 +25,7 @@ const Router = () => {
                         <Route path="register" element={<Register />} />
                         <Route path="reset-password" element={<ResetPassword />} />
                         <Route path="agencies" element={<Agencies />} />
+                        <Route path="cars-found" element={<CarsFound />} />
                         <Route element={<PrivateRoutes />}>
                             <Route path="profile" element={<Profile />} />
                         </Route>
