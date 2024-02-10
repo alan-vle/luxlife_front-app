@@ -1,3 +1,5 @@
-.car-image img {
-
+input.required::after {
+    content: "*"; /* Ajout de l'astérisque */
+    color: red; /* Couleur rouge */
+    margin-left: 5px; /* Marge à gauche pour séparer l'astérisque de l'input */
 }

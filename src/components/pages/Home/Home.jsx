@@ -7,7 +7,7 @@ import trafficJamImage from "../../../assets/traffic-jam.png";
 import {useState} from "react";
 import RentalForm from "../../Home/Rental/RentalForm.jsx";
 import ListOfCars from "../../Home/List-of-cars/ListOfCars.jsx";
-
+import "./Home.css"
 const Home = () => {
     const [content, setContent] = useState('form');
     const [selectedBorder, setSelectedBorder] = useState('form');

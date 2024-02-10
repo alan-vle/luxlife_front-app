@@ -119,6 +119,7 @@ export function Register() {
                 plainPassword: password,
                 phoneNumber: phoneNumber
             }
+
             RegisterService(registerData)
         } else {
             toast.error("Remplissez le formulaire correctement.", {

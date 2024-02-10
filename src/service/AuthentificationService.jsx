@@ -6,7 +6,7 @@ const headers = {
     'Content-Type': 'application/json',
 };
 const RegisterService = (registerData) => {
-    console.log(registerData)
+
     axios.post(`${apiUrl}/register`, registerData, {headers})
         .then(() => {
             toast.success("Inscription réussie ! Vérifiez votre email pour vous connecter.", {
@@ -14,14 +14,24 @@ const RegisterService = (registerData) => {
             })
         })
         .catch(error => {
-            if(error.status === 400) {
-                const constraints = error.data.constraints
-                console.log(error.data)
-                if(constraints.fields.indexOf('email') !== -1) {
+            const response = error.response
 
+            if(response.status === 400) {
+                const constraints = response.data.constraints
+                const emailAlreadyUsed = constraints.filter(constraint => constraint.field === "email" && constraint.message ===  "This email is already used.");
+
+                if(emailAlreadyUsed.length > 0) {
+                   toast.error("Email déja utilisée.", {
+                       position: "top-center",
+
+                   })
+                } else {
+                    toast.error("Le formulaire n'est pas valide !", {
+                        position: "top-center"
+                    });
                 }
             } else {
-                toast.error("An error occurred !", {
+                toast.error("Une erreur est survenue, réessayez plus tard.   !", {
                     position: "top-center"
                 });
             }
