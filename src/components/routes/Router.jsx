@@ -13,6 +13,7 @@ import Footer from "../parts/Footer.jsx";
 import Agencies from "../pages/Agencies.jsx";
 import CarsFound from "@/components/pages/Rental/CarsFound.jsx";
 import ConfirmEmail from "@/components/pages/Account/ConfirmEmail.jsx";
+import ForgotPassword from "@/components/pages/Account/ForgotPassword.jsx";
 
 const Router = () => {
     return (
@@ -24,10 +25,11 @@ const Router = () => {
                         <Route path="/" element={<Home />} />
                         <Route path="login" element={<Login />} />
                         <Route path="register" element={<Register />} />
+                        <Route path="confirm-email/:uuid" element={<ConfirmEmail />} />
+                        <Route path="forgot-password" element={<ForgotPassword />} />
                         <Route path="reset-password" element={<ResetPassword />} />
                         <Route path="agencies" element={<Agencies />} />
                         <Route path="cars-found" element={<CarsFound />} />
-                        <Route path="confirm-email/:uuid" element={<ConfirmEmail />} />
                         <Route element={<PrivateRoutes />}>
                             <Route path="profile" element={<Profile />} />
                         </Route>

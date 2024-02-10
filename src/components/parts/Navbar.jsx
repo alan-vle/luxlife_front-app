@@ -99,7 +99,7 @@ function NavbarSimple() {
                         </>
                     )
                     : (
-                        <Typography as={"paragraph"}>Logged</Typography>
+                        <Typography variant={"paragraph"}>Logged</Typography>
                     )
                 }
 
@@ -129,7 +129,10 @@ function NavbarSimple() {
                             </Link>
                         </Typography>
                     </>
-                    : <Typography as={"paragraph"}>Logged</Typography>
+                    :
+                    <>
+                        <Typography variant={"paragraph"}>Logged</Typography>
+                    </>
                 }
 
             </Collapse>

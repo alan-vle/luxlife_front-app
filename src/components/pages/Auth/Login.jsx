@@ -1,5 +1,5 @@
 import {Alert, Button, Card, CardBody, Input, Typography} from "@material-tailwind/react";
-import {OneFieldPassword} from "@/utils/Password.jsx";
+import {OneFieldPassword} from "@/utils/Forms/Password.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleCheck, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
@@ -61,7 +61,7 @@ const Login = () => {
                                 <Button onClick={submitHandler}>Connexion</Button>
                             </div>
                             <div className={"col-span-2 mt-4 flex justify-end"}>
-                                <Button variant={"text"} onClick={() => goTo('/reset-password')}>Mot de passe oublié?</Button>
+                                <Button variant={"text"} onClick={() => goTo('/forgot-password')}>Mot de passe oublié?</Button>
                             </div>
                         </div>
                     </CardBody>

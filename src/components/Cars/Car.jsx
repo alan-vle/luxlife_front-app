@@ -8,7 +8,7 @@ function Car({manufacturer, model, contentUrl, kilometers, uuid}) {
                 <img src={`${apiUrl}/${contentUrl}`} className={"w-[300px] max-w-[300px] h-[169px] max-h-[169px]"} alt={""}/>
             </div>
 
-            <Typography as={"h4"} className={"font-bold mt-8"}>
+            <Typography variant={"h4"} className={"font-bold mt-8"}>
                 {manufacturer.name} {model} <br />
                 {kilometers} km
             </Typography>
