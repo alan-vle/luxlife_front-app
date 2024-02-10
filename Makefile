@@ -47,9 +47,8 @@ start: up dev
 
 launch: build install dev
 
-stop: $(ROOT_DIR)/docker-compose.yml
-	$(DOCKER_COMPOSE) kill || true
-	$(DOCKER_COMPOSE) rm --force || true
+stop:
+	@$(DOCKER_COMPOSE) down --remove-orphans
 
 restart: stop start dev
 

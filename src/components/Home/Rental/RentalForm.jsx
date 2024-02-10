@@ -80,6 +80,7 @@ function RentalForm() {
                     <div>
                         <div  style={{ position: 'relative', display: 'inline-block' }}>
                             <Input size="md" label="Agence de départ" placeholder={"Marseille"}
+                                   className={"required"}
                                    onChange={(e) => setFromAgency(e.target.value)}  onInput={(e) => inputAgencyHandler(e,"from")}
                                     value={`${fromAgency !== null ? fromAgency : ''}`}
                             />

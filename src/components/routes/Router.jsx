@@ -7,11 +7,12 @@ import BasketProvider from "../store/BasketContext.jsx";
 import Header from "../parts/Header.jsx";
 import Register from "../pages/Auth/Register.jsx";
 import Profile from "../pages/Profile/Profile.jsx";
-import ResetPassword from "../pages/ResetPassword.jsx";
+import ResetPassword from "../pages/Account/ResetPassword.jsx";
 import About from "../pages/About.jsx";
 import Footer from "../parts/Footer.jsx";
 import Agencies from "../pages/Agencies.jsx";
 import CarsFound from "@/components/pages/Rental/CarsFound.jsx";
+import ConfirmEmail from "@/components/pages/Account/ConfirmEmail.jsx";
 
 const Router = () => {
     return (
@@ -26,6 +27,7 @@ const Router = () => {
                         <Route path="reset-password" element={<ResetPassword />} />
                         <Route path="agencies" element={<Agencies />} />
                         <Route path="cars-found" element={<CarsFound />} />
+                        <Route path="confirm-email/:uuid" element={<ConfirmEmail />} />
                         <Route element={<PrivateRoutes />}>
                             <Route path="profile" element={<Profile />} />
                         </Route>
