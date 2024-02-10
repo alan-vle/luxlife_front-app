@@ -135,7 +135,7 @@ export function Register() {
             <div className={"col-span-6 flex justify-center w-full h-auto"}>
                 <Card>
                     <CardBody>
-                        <Typography className={"font-extrabold text-[40px] text-black"}>Rejoignez nous en devenant client !</Typography>
+                        <Typography className={"text-black font-extrabold text-[40px]"}>Rejoignez nous en devenant client !</Typography>
                         <div className={"grid grid-cols-2 gap-2 mt-8 placeholder:text-slate-400"}>
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
@@ -247,7 +247,7 @@ function fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotV
     }
 }
 
-function emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid) {
+export function emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid) {
     const emailValue = e.target.value
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

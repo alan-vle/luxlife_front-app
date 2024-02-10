@@ -10,6 +10,7 @@ import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleUser} from "@fortawesome/free-regular-svg-icons";
 import luxlifeLogo from "../../assets/luxlife_logo.png";
+import {isAuth} from "@/utils/auth.js";
 function NavList() {
     return (
         <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -59,63 +60,78 @@ function NavbarSimple() {
                         <img src={luxlifeLogo} alt="Luxlife logo" className=""/>
                     </Link>
                 </div>
-                <div className="hidden gap-2 lg:flex">
-                    <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
-                    <Typography
-                        as="a"
-                        variant="h6"
-                        className="cursor-pointer py-1.5"
-                    >
-                        <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
-                            Connexion
-                        </Link>
-                    </Typography>
-                    <div className={"py-1.5 font-bold"}>|</div>
-                    <Typography
-                        as="a"
-                        variant="h6"
-                        className="cursor-pointer py-1.5"
-                    >
-                        <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
-                            Inscription
-                        </Link>
-                    </Typography>
-                </div>
-                <IconButton
-                    variant="text"
-                    className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-                    ripple={false}
-                    onClick={() => setOpenNav(!openNav)}
-                >
-                    {openNav ? (
-                        <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-                    ) : (
-                        <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-                    )}
-                </IconButton>
+                {!isAuth() ? (
+                        <>
+                            <div className="hidden gap-2 lg:flex">
+                                <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
+                                <Typography
+                                    as="a"
+                                    variant="h6"
+                                    className="cursor-pointer py-1.5"
+                                >
+                                    <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
+                                        Connexion
+                                    </Link>
+                                </Typography>
+                                <div className={"py-1.5 font-bold"}>|</div>
+                                <Typography
+                                    as="a"
+                                    variant="h6"
+                                    className="cursor-pointer py-1.5"
+                                >
+                                    <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
+                                        Inscription
+                                    </Link>
+                                </Typography>
+                            </div>
+                            <IconButton
+                                variant="text"
+                                className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+                                ripple={false}
+                                onClick={() => setOpenNav(!openNav)}
+                            >
+                                {openNav ? (
+                                    <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+                                ) : (
+                                    <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+                                )}
+                            </IconButton>
+                        </>
+                    )
+                    : (
+                        <Typography as={"paragraph"}>Logged</Typography>
+                    )
+                }
+
             </div>
             <Collapse open={openNav} className={"text-blue-gray-900"}>
                 <NavList />
-                <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
-                <Typography
-                    as="a"
-                    variant="h6"
-                    className="cursor-pointer py-1.5"
-                >
-                    <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
-                        Connexion
-                    </Link>
-                </Typography>
-                <div className={"py-1.5 font-bold"}>|</div>
-                <Typography
-                    as="a"
-                    variant="h6"
-                    className="cursor-pointer py-1.5"
-                >
-                    <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
-                        Inscription
-                    </Link>
-                </Typography>
+                {!isAuth() ?
+                    <>
+                        <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
+                        <Typography
+                            as="a"
+                            variant="h6"
+                            className="cursor-pointer py-1.5"
+                        >
+                            <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
+                                Connexion
+                            </Link>
+                        </Typography>
+                        <div className={"py-1.5 font-bold"}>|</div>
+                        <Typography
+                            as="a"
+                            variant="h6"
+                            className="cursor-pointer py-1.5"
+                        >
+                            <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
+                                Inscription
+                            </Link>
+                        </Typography>
+                    </>
+                    : <Typography as={"paragraph"}>Logged</Typography>
+                }
+
             </Collapse>
         </Navbar>
     );

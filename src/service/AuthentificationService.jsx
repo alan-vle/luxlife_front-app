@@ -39,4 +39,32 @@ const RegisterService = (registerData) => {
         })
 }
 
-export {RegisterService};
+
+const LoginService = (loginData, goTo) => {
+    const invalidCredentials = () => {
+        toast.error("Identifiants invalides!", {
+            position: "top-center"
+        })
+    }
+
+    axios.post(`${apiUrl}/login`, loginData, {headers})
+        .then(response => {
+            const token = response.data.token
+
+            if(null !== token) {
+                sessionStorage.setItem("token", token)
+                goTo('/', {replace: true})
+                goTo(0)
+                toast.success("Vous êtes connecté.", {
+                    position: "top-center"
+                })
+
+            } else {
+                invalidCredentials()
+            }
+        })
+        .catch(() => {
+            invalidCredentials()
+        })
+}
+export {RegisterService, LoginService};
