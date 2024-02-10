@@ -12,6 +12,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {toast} from "react-toastify";
 import {RegisterService} from "@/service/AuthentificationService.jsx";
 import "./Register.css"
+import {useNavigate} from "react-router";
 
 function IconOutlined() {
     return (
@@ -76,7 +77,7 @@ export function Register() {
     const [passwordLength, setPasswordLength] = useState(false);
     const [passwordLowUp, setPasswordLowUp] = useState(false);
     const [passwordSymbol, setPasswordSymbol] = useState(false);
-
+    const goTo = useNavigate()
     const fullNameHandler = (e) => {
         fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid)
     }
@@ -120,7 +121,7 @@ export function Register() {
                 phoneNumber: phoneNumber
             }
 
-            RegisterService(registerData)
+            RegisterService(registerData, goTo)
         } else {
             toast.error("Remplissez le formulaire correctement.", {
                 position: "top-center"

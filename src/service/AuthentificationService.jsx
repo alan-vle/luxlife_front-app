@@ -5,13 +5,14 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const headers = {
     'Content-Type': 'application/json',
 };
-const RegisterService = (registerData) => {
+const RegisterService = (registerData, goTo) => {
 
     axios.post(`${apiUrl}/register`, registerData, {headers})
         .then(() => {
             toast.success("Inscription réussie ! Vérifiez votre email pour vous connecter.", {
                 position: "top-center"
             })
+            goTo('/login')
         })
         .catch(error => {
             const response = error.response
@@ -31,7 +32,7 @@ const RegisterService = (registerData) => {
                     });
                 }
             } else {
-                toast.error("Une erreur est survenue, réessayez plus tard.   !", {
+                toast.error("Une erreur est survenue, réessayez plus tard !", {
                     position: "top-center"
                 });
             }

@@ -11,10 +11,10 @@ function getAllCars() {
             return data !== null ? data : null;
         })
         .catch(error => {
-            toast.error("An error occurred !", {
+            toast.error("Une erreur est survenue !", {
                 position: "top-center"
             });
-
+            alert(error)
             return null;
         });
 }
@@ -36,7 +36,7 @@ function getAvailableCars(agency) {
             }
         })
         .catch(error => {
-            toast.error("An error occurred !", {
+            toast.error("Une erreur est survenue !", {
                 position: "top-center"
             });
 
