@@ -5,13 +5,13 @@ import {
     Button,
     Typography, CardBody, Alert,
 } from "@material-tailwind/react";
-import "./Register.css"
 import {OneFieldPassword} from "@/utils/Password.jsx";
 import {useRef, useState} from "react";
 import {faCircleCheck, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {toast} from "react-toastify";
 import {RegisterService} from "@/service/AuthentificationService.jsx";
+import "./Register.css"
 
 function IconOutlined() {
     return (
@@ -60,6 +60,12 @@ export function Register() {
     const [addressIsValid, setAddressIsValid] = useState(false);
     const [addressIsNotValid, setAddressIsNotValid] = useState(false);
     const [birthDate, setBirthDate] = useState(null);
+    const [requiredAge, setRequiredAge] = useState(null)
+    const [birthDateIsValid, setBirthDateIsValid] = useState(false);
+    const [birthDateIsNotValid, setBirthDateIsNotValid] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState(null);
+    const [phoneNumberIsValid, setPhoneNumberIsValid] = useState(false);
+    const [phoneNumberIsNotValid, setPhoneNumberIsNotValid] = useState(false);
     const [password, setPassword] = useState(null);
     const [passwordIsValid, setPasswordIsValid] = useState(false)
     const [passwordIsNotValid, setPasswordIsNotValid] = useState(false)
@@ -81,6 +87,10 @@ export function Register() {
     const addressHandler = (e) => {
         addressValidator(e, setAddress, setAddressIsValid, setAddressIsNotValid)
     }
+
+    const phoneNumberHandler = (e) => {
+        phoneNumberValidator(e, setPhoneNumber, setPhoneNumberIsValid, setPhoneNumberIsNotValid)
+    }
     const passwordHandler = (e) => {
         passwordValidator(
             e, setPassword, setPasswordIsValid, setPasswordIsNotValid,
@@ -95,17 +105,20 @@ export function Register() {
        )
     }
 
-    const submitHandler = () => {
-        if(fullNameIsValid && emailIsValid && addressIsValid && birthDate && passwordIsValid && confirmPasswordIsValid) {
-            const registerData = {
-                "fullName": fullName,
-                "email": email,
-                "address": address,
-                "birthDate": birthDate,
-                "plainPassword": password,
-                "phoneNumber": "697562658"
-            }
+    const birthDateHandler = (e) => {
+        birthDateValidator(e, setBirthDate, setBirthDateIsValid, setBirthDateIsNotValid, setRequiredAge)
+    }
 
+    const submitHandler = () => {
+        if(fullNameIsValid && emailIsValid && addressIsValid && phoneNumberIsValid && passwordIsValid && confirmPasswordIsValid && birthDateIsValid) {
+            const registerData = {
+                fullName: fullName,
+                email: email,
+                address: address,
+                birthDate: birthDate,
+                plainPassword: password,
+                phoneNumber: phoneNumber
+            }
             RegisterService(registerData)
         } else {
             toast.error("Remplissez le formulaire correctement.", {
@@ -117,39 +130,41 @@ export function Register() {
 
     return (
         <div className={"grid grid-cols-12 mt-28 mb-28"}>
-            <div className={"col-span-3"}>{password}</div>
+            <div className={"col-span-3"}></div>
             <div className={"col-span-6 flex justify-center w-full h-auto"}>
                 <Card>
                     <CardBody>
                         <Typography className={"font-extrabold text-[40px] text-black"}>Rejoignez nous en devenant client !</Typography>
                         <div className={"grid grid-cols-2 gap-2 mt-8 placeholder:text-slate-400"}>
                             <div className={"mb-4 "}>
-                                <Input label={"Votre nom"} placeholder={"Ex : Jon Jony"}
+                                <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
                                        onChange={fullNameHandler}
                                        success={fullNameIsValid}
                                        error={fullNameIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
-                                <Input label={"Votre email"} placeholder={"Ex : jon-jony13@gmail.com"}
+                                <Input label={"Email"} placeholder={"Ex : jon-jony13@gmail.com"}
                                        onChange={emailHandler}
                                        success={emailIsValid}
                                        error={emailIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
-                                <Input label={"Votre adresse"} placeholder={"Ex : 12 rue des champignons, 13002 Marseille"}
+                                <Input label={"Adresse"} placeholder={"Ex : 12 rue des champignons, 13002 Marseille"}
                                        onChange={addressHandler}
                                        success={addressIsValid}
                                        error={addressIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
-                                <Input label={"Votre date de naissance"} type={"date"} placeholder={"Ex : 28/01/1995"}
-                                       onChange={(e) => setBirthDate(e.target.value)}
+                                <Input label={"Téléphone"} placeholder={"Ex : 0787652345"}
+                                       onChange={phoneNumberHandler}
+                                       success={phoneNumberIsValid}
+                                       error={phoneNumberIsNotValid}
+                                       maxLength={10}
                                 />
                             </div>
-
                             <div className={"mb-4"}>
                                 <OneFieldPassword
                                     onChange={passwordHandler}
@@ -167,7 +182,7 @@ export function Register() {
                                 />
                             </div>
                             {visiblePasswordTooltips && (
-                                <div className={"col-span-2"}>
+                                <div className={"col-span-2 mb-2"}>
                                     <Alert variant="outlined" icon={<IconSolid />}>
                                         <Typography className="font-medium">
                                             Votre mot de passe doit être conforme a ces règles:
@@ -186,7 +201,7 @@ export function Register() {
                                                     : <FontAwesomeIcon icon={faCircleCheck} style={{color: "#10c400",}}/>
                                                 }
                                             </li>
-                                            <li>Et utiliser ces symboles : ! @ # ? &nbsp;
+                                            <li>Et utiliser au moins 2 de ces symboles : ! @ # ? &nbsp;
                                                 {!passwordSymbol ?
                                                     <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
                                                     : <FontAwesomeIcon icon={faCircleCheck}  style={{color: "#10c400",}}/>
@@ -196,8 +211,14 @@ export function Register() {
                                     </Alert>
                                 </div>
                             )}
-
-
+                            <div className={"mb-4"}>
+                                {false === requiredAge && (<Typography as={"h3"} color={"red"}>Vous devez avoir 18 ans !</Typography>)}
+                                <Input label={"Votre date de naissance"} type={"date"} placeholder={"Ex : 28/01/1995"}
+                                       onChange={birthDateHandler}
+                                       success={birthDateIsValid}
+                                       error={birthDateIsNotValid}
+                                />
+                            </div>
                         </div>
                         <div className={"col-span-2 flex place-content-center mt-2"}>
                             <Button type={"button"} onClick={submitHandler}>S'inscrire</Button>
@@ -271,6 +292,28 @@ function passwordValidator(e, setPassword, setPasswordIsValid, setPasswordIsNotV
     }
 }
 
+function phoneNumberValidator(e, setPhoneNumber, setPhoneNumberIsValid, setPhoneNumberIsNotValid) {
+    const phoneValue = e.target.value
+    const field = e.target
+    const phoneRegex = /^(0|\+33|\+330|0033)[67]\d{0,8}$/;
+
+    if (phoneValue.startsWith('+330')){
+        field.maxLength = 13;
+    } else if(phoneValue.startsWith('0')) {
+        field.maxLength = 10;
+    }
+
+    if(phoneRegex.test(phoneValue)) {
+        setPhoneNumber(phoneValue.replace(/^(0|\+330|0033)/, ''))
+        setPhoneNumberIsValid(true)
+        setPhoneNumberIsNotValid(false)
+    } else {
+        setPhoneNumber(null)
+        setPhoneNumberIsValid(false)
+        setPhoneNumberIsNotValid(true)
+    }
+}
+
 function confirmPasswordValidator(e, password, passwordIsValid, setConfirmPassword, setConfirmPasswordIsValid, setConfirmPasswordIsNotValid) {
     const confirmPasswordValue = e.target.value
 
@@ -282,6 +325,32 @@ function confirmPasswordValidator(e, password, passwordIsValid, setConfirmPasswo
         setConfirmPassword(null)
         setConfirmPasswordIsValid(false)
         setConfirmPasswordIsNotValid(true)
+    }
+}
+
+function birthDateValidator(e, setBirthDate, setBirthDateIsValid, setBirthDateIsNotValid, setRequiredAge) {
+    const birthDateValue = new Date(e.target.value);
+
+    if (isNaN(birthDateValue.getTime())) {
+        setBirthDate(null)
+        setBirthDateIsValid(false)
+        setBirthDateIsNotValid(true)
+        setRequiredAge(false)
+        return;
+    }
+    const currentDate = new Date()
+    const requiredAge = currentDate.setFullYear(currentDate.getFullYear() - 18);
+
+    if(birthDateValue <= requiredAge) {
+        setBirthDate(birthDateValue.toLocaleDateString())
+        setBirthDateIsValid(true)
+        setBirthDateIsNotValid(false)
+        setRequiredAge(true)
+    } else {
+        setBirthDate(null)
+        setBirthDateIsValid(false)
+        setBirthDateIsNotValid(true)
+        setRequiredAge(false)
     }
 }
 
@@ -313,14 +382,14 @@ function hasLowerAndUpperCarac(passwordValue, setPasswordLowUp) {
 
 
 function containsSpecialSymbols(passwordValue, setPasswordSymbol) {
-    const symbolsRegex = /[!@#?]/;
-    if(symbolsRegex.test(passwordValue)) {
-        setPasswordSymbol(true)
+    const symbolsRegex = /[!@#?]/g;
+    const symbolsMatch = passwordValue.match(symbolsRegex);
 
+    if (symbolsMatch && symbolsMatch.length >= 2) {
+        setPasswordSymbol(true);
         return true;
     } else {
-        setPasswordSymbol(false)
-
+        setPasswordSymbol(false);
         return false;
     }
 }
