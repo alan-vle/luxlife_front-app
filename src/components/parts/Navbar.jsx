@@ -9,8 +9,9 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {Link} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleUser} from "@fortawesome/free-regular-svg-icons";
-import luxlifeLogo from "../../assets/luxlife_logo.png";
+import luxlifeLogo from "@/assets/luxlife_logo.png";
 import {isAuth} from "@/utils/auth.js";
+import ProfileMenu from "@/components/parts/ProfileMenu.jsx";
 function NavList() {
     return (
         <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -98,9 +99,7 @@ function NavbarSimple() {
                             </IconButton>
                         </>
                     )
-                    : (
-                        <Typography variant={"paragraph"}>Logged</Typography>
-                    )
+                    : <div className={"mr-8"}><ProfileMenu /></div>
                 }
 
             </div>
@@ -129,10 +128,7 @@ function NavbarSimple() {
                             </Link>
                         </Typography>
                     </>
-                    :
-                    <>
-                        <Typography variant={"paragraph"}>Logged</Typography>
-                    </>
+                    : <div className={"mr-8"}><ProfileMenu /></div>
                 }
 
             </Collapse>

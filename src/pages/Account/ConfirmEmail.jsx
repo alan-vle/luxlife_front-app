@@ -1,8 +1,8 @@
 import {useNavigate, useParams} from "react-router";
 import {useSearchParams} from "react-router-dom";
 import {useEffect} from "react";
-import {ConfirmEmailService} from "@/service/AccountService.jsx";
-import Login from "@/components/pages/Auth/Login.jsx";
+import {ConfirmEmailService} from "@/service/api/AccountService.jsx";
+import Login from "@/pages/Auth/Login.jsx";
 
 const ConfirmEmail = () => {
     const {uuid} = useParams()

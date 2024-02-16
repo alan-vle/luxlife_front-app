@@ -1,6 +1,6 @@
 import {useLocation} from "react-router";
 import {useEffect, useState} from "react";
-import {getAvailableCars} from "@/service/CarsService.jsx";
+import {getAvailableCars} from "@/service/api/CarsService.jsx";
 import Cars from "@/components/Cars/Cars.jsx";
 
 

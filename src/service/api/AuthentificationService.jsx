@@ -1,5 +1,6 @@
 import axios from "axios";
 import {toast} from "react-toastify";
+import {errorNotif, successNotif} from "@/utils/Notif.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const headers = {
@@ -9,9 +10,8 @@ const RegisterService = (registerData, goTo) => {
 
     axios.post(`${apiUrl}/register`, registerData, {headers})
         .then(() => {
-            toast.success("Inscription réussie ! Vérifiez votre email pour vous connecter.", {
-                position: "top-center"
-            })
+            successNotif('Inscription réussie ! Vérifiez votre email pour vous connecter.')
+
             goTo('/login')
         })
         .catch(error => {
@@ -22,19 +22,12 @@ const RegisterService = (registerData, goTo) => {
                 const emailAlreadyUsed = constraints.filter(constraint => constraint.field === "email" && constraint.message ===  "This email is already used.");
 
                 if(emailAlreadyUsed.length > 0) {
-                   toast.error("Email déja utilisée.", {
-                       position: "top-center",
-
-                   })
+                    errorNotif('Email déja utilisée.')
                 } else {
-                    toast.error("Le formulaire n'est pas valide !", {
-                        position: "top-center"
-                    });
+                   errorNotif('Le formulaire n\'est pas valide !')
                 }
             } else {
-                toast.error("Une erreur est survenue, réessayez plus tard !", {
-                    position: "top-center"
-                });
+               errorNotif()
             }
 
         })
@@ -54,11 +47,9 @@ const LoginService = (loginData, goTo) => {
 
             if(null !== token) {
                 sessionStorage.setItem("token", token)
+
                 goTo('/', {replace: true})
                 goTo(0)
-                toast.success("Vous êtes connecté.", {
-                    position: "top-center"
-                })
 
             } else {
                 invalidCredentials()

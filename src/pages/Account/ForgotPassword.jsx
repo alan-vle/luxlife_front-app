@@ -1,10 +1,10 @@
 import {Button, Card, CardBody, Input, Typography} from "@material-tailwind/react";
 import {useState} from "react";
 import {useNavigate, useParams} from "react-router";
-import {emailValidator} from "@/components/pages/Auth/Register.jsx";
 import {toast} from "react-toastify";
-import {ForgotPasswordService} from "@/service/AccountService.jsx";
+import {ForgotPasswordService} from "@/service/api/AccountService.jsx";
 import {isAuth} from "@/utils/auth.js";
+import {emailValidator} from "@/utils/Forms/Validator/Validator.jsx";
 
 const ForgotPassword = () => {
     if(isAuth()) {

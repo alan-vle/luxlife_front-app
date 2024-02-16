@@ -10,7 +10,7 @@ import trafficJamImage from "../../../assets/traffic-jam.png"
 import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
-import {getAgenciesByCity} from "@/service/AgenciesService.jsx";
+import {getAgenciesByCity} from "@/service/api/AgenciesService.jsx";
 import {Navigate, useNavigate} from "react-router";
 function RentalForm() {
     const [fromAgency, setFromAgency] = useState(null);

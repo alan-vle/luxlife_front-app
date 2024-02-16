@@ -1,12 +1,13 @@
-export const jsonContentType = {
+import {token} from "@/utils/auth.js";
+
+const jsonContentType = {
     'Content-Type': 'application/json',
 };
 
-export const authorization = {
-    'Authorization': 'Bearer token'
-}
+const authorization = {
+    'Authorization': `Bearer ${token}`
+};
 
-export const defaultHeader = {
-    jsonContentType,
-    authorization
-}
+const defaultHeaders = { ...jsonContentType, ...authorization };
+
+export { jsonContentType, authorization, defaultHeaders };

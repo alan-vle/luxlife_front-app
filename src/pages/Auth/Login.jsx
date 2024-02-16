@@ -4,9 +4,9 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleCheck, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import {useState} from "react";
 import {useNavigate} from "react-router";
-import {emailValidator} from "@/components/pages/Auth/Register.jsx";
 import {toast} from "react-toastify";
-import {LoginService} from "@/service/AuthentificationService.jsx";
+import {LoginService} from "@/service/api/AuthentificationService.jsx";
+import {emailValidator} from "@/utils/Forms/Validator/Validator.jsx";
 
 const Login = () => {
     const [email, setEmail] = useState(null);

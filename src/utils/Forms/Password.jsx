@@ -38,7 +38,7 @@ const OneFieldPassword = ({
     );
 }
 
-const PasswordTooltips = ({passwordLength, passwordLowUp, passwordSymbol}) => {
+const PasswordTooltips = ({passwordLength, passwordLowUp, passwordNumber, passwordSymbol}) => {
     return (
         <div className={"col-span-2 mb-2"}>
             <Alert variant="outlined" icon={<IconSolid />}>
@@ -57,6 +57,12 @@ const PasswordTooltips = ({passwordLength, passwordLowUp, passwordSymbol}) => {
                         {!passwordLowUp ?
                             <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
                             : <FontAwesomeIcon icon={faCircleCheck} style={{color: "#10c400",}}/>
+                        }
+                    </li>
+                    <li>Au moins deux chiffres. &nbsp;
+                        {!passwordNumber ?
+                            <FontAwesomeIcon icon={faCircleXmark} style={{color: "#e01b24",}} />
+                            : <FontAwesomeIcon icon={faCircleCheck}  style={{color: "#10c400",}}/>
                         }
                     </li>
                     <li>Et utiliser au moins 2 de ces symboles : ! @ # ? &nbsp;

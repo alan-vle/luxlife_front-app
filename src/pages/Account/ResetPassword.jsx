@@ -1,13 +1,9 @@
 import {Alert, Button, Card, CardBody, Input, Typography} from "@material-tailwind/react";
 import {useState} from "react";
-import {useNavigate, useParams} from "react-router";
-import {confirmPasswordValidator, emailValidator, passwordValidator} from "@/components/pages/Auth/Register.jsx";
-import {toast} from "react-toastify";
-import {ResetPasswordService} from "@/service/AccountService.jsx";
+import {useNavigate} from "react-router";
 import {isAuth} from "@/utils/auth.js";
 import {OneFieldPassword, PasswordTooltips} from "@/utils/Forms/Password.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCircleCheck, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
+import {confirmPasswordValidator, passwordValidator} from "@/utils/Forms/Validator/Validator.jsx";
 
 const ResetPassword = () => {
     if(isAuth()) {

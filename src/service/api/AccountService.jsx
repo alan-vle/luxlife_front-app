@@ -1,6 +1,7 @@
 import axios from "axios";
 import {toast} from "react-toastify";
 import {jsonContentType} from "@/utils/ApiHeaders.js";
+import {errorNotif, successNotif} from "@/utils/Notif.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 
@@ -14,53 +15,41 @@ const ConfirmEmailService = (uuid, expires, signature, goTo) => {
     axios.get(`${apiUrl}/confirm-email/${uuid}`, {params})
         .then(result => {
             if(result.status === 200) {
-                toast.success("Votre email à été vérifié", {
-                    position: "top-center"
-                })
+                successNotif('Votre adresse email à été vérifiée.')
 
                 goTo('/login')
             }
         })
         .catch(error => {
-            toast.error("Le lien est invalide.", {
-                position: "top-center"
-            })
+            errorNotif('Le lien est invalide.')
 
-           goTo('/not-found')
+            goTo('/not-found')
         })
 }
 
 const ForgotPasswordService = (email, goTo) => {
-    const sentEmail = () => {
-        toast.success("Consultez vos emails !", {
-            position: "top-center"
-        })
-    }
+    const sentEmailMessage =  'Consultez vos emails !'
 
-    axios.post(`${apiUrl}/forgot_password/`, {email}, {jsonContentType})
+    axios.post(`${apiUrl}/forgot_password/`, {email}, {headers: jsonContentType})
         .then(() => {
-            sentEmail()
+            successNotif(sentEmailMessage)
 
                 //goTo('/login')
         })
         .catch(() => {
-            sentEmail()
+            successNotif(sentEmailMessage)
         })
 }
 
 const ResetPasswordService = (token, password, goTo) => {
-    axios.post(`${apiUrl}/forgot_password/${token}`, {password}, {jsonContentType})
+    axios.post(`${apiUrl}/forgot_password/${token}`, {password}, {headers: jsonContentType})
         .then(() => {
-            toast.success('Mot de passe modifié !', {
-                position: "top-center"
-            })
+            successNotif('Votre mot de passe à bien été modifié !')
 
             goTo('/login')
         })
         .catch(() => {
-            toast.error('Un problème est survenue, réessayez plus tard.', {
-                position: "top-center"
-            })
+            errorNotif('Un problème est survenue, réessayez plus tard.')
         })
 }
 

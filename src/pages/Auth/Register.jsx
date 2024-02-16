@@ -6,13 +6,16 @@ import {
     Typography, CardBody, Alert,
 } from "@material-tailwind/react";
 import {OneFieldPassword, PasswordTooltips} from "@/utils/Forms/Password.jsx";
-import {useRef, useState} from "react";
-import {faCircleCheck, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {toast} from "react-toastify";
-import {RegisterService} from "@/service/AuthentificationService.jsx";
+import {useState} from "react";
+import {RegisterService} from "@/service/api/AuthentificationService.jsx";
 import "./Register.css"
 import {useNavigate} from "react-router";
+import {
+    addressValidator, birthDateValidator, confirmPasswordValidator, emailValidator,
+    fullNameValidator, passwordValidator,
+    phoneNumberValidator
+} from "@/utils/Forms/Validator/Validator.jsx";
+import {errorNotif} from "@/utils/Notif.js";
 
 function IconOutlined() {
     return (
@@ -61,11 +64,13 @@ export function Register() {
     const [visiblePasswordTooltips, setVisiblePasswordTooltips] = useState(false);
     const [passwordLength, setPasswordLength] = useState(false);
     const [passwordLowUp, setPasswordLowUp] = useState(false);
+    const [passwordNumber, setPasswordNumber] = useState(false);
     const [passwordSymbol, setPasswordSymbol] = useState(false);
     const goTo = useNavigate()
     const fullNameHandler = (e) => {
         fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid)
-    }
+    };
+
     const emailHandler = (e) => {
         emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid)
     }
@@ -80,7 +85,7 @@ export function Register() {
     const passwordHandler = (e) => {
         passwordValidator(
             e, setPassword, setPasswordIsValid, setPasswordIsNotValid,
-            setPasswordLength, setPasswordLowUp, setPasswordSymbol
+            setPasswordLength, setPasswordLowUp, setPasswordNumber, setPasswordSymbol
         )
     }
 
@@ -101,18 +106,15 @@ export function Register() {
                 fullName: fullName,
                 email: email,
                 address: address,
-                birthDate: birthDate,
+                birthDate: new Date(convertStringToDateIso(birthDate)),
                 plainPassword: password,
                 phoneNumber: phoneNumber
             }
 
             RegisterService(registerData, goTo)
         } else {
-            toast.error("Remplissez le formulaire correctement.", {
-                position: "top-center"
-            });
+           errorNotif('Remplissez le formulaire correctement.')
         }
-
     }
 
     return (
@@ -125,31 +127,31 @@ export function Register() {
                         <div className={"grid grid-cols-2 gap-2 mt-8 placeholder:text-slate-400"}>
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
-                                       onChange={fullNameHandler}
-                                       success={fullNameIsValid}
-                                       error={fullNameIsNotValid}
+                                   onChange={fullNameHandler}
+                                   success={fullNameIsValid}
+                                   error={fullNameIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
                                 <Input label={"Email"} placeholder={"Ex : jon-jony13@gmail.com"}
-                                       onChange={emailHandler}
-                                       success={emailIsValid}
-                                       error={emailIsNotValid}
+                                   onChange={emailHandler}
+                                   success={emailIsValid}
+                                   error={emailIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
                                 <Input label={"Adresse"} placeholder={"Ex : 12 rue des champignons, 13002 Marseille"}
-                                       onChange={addressHandler}
-                                       success={addressIsValid}
-                                       error={addressIsNotValid}
+                                   onChange={addressHandler}
+                                   success={addressIsValid}
+                                   error={addressIsNotValid}
                                 />
                             </div>
                             <div className={"mb-4"}>
                                 <Input label={"Téléphone"} placeholder={"Ex : 0787652345"}
-                                       onChange={phoneNumberHandler}
-                                       success={phoneNumberIsValid}
-                                       error={phoneNumberIsNotValid}
-                                       maxLength={10}
+                                   onChange={phoneNumberHandler}
+                                   success={phoneNumberIsValid}
+                                   error={phoneNumberIsNotValid}
+                                   maxLength={10}
                                 />
                             </div>
                             <div className={"mb-4"}>
@@ -163,15 +165,16 @@ export function Register() {
                             </div>
                             <div className={"mb-4"}>
                                 <OneFieldPassword label={"Confirmez votre mot de passe"}
-                                      onChange={confirmPasswordHandler}
-                                      success={confirmPasswordIsValid}
-                                      error={confirmPasswordIsNotValid}
+                                    onChange={confirmPasswordHandler}
+                                    success={confirmPasswordIsValid}
+                                    error={confirmPasswordIsNotValid}
                                 />
                             </div>
                             {visiblePasswordTooltips &&
                                 <PasswordTooltips
                                     passwordLength={passwordLength}
                                     passwordLowUp={passwordLowUp}
+                                    passwordNumber={passwordNumber}
                                     passwordSymbol={passwordSymbol}
                                 />
                             }
@@ -195,166 +198,10 @@ export function Register() {
         );
 }
 
-function fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid) {
-    const fullNameValue = e.target.value
-    const frFullNameRegex = /^[a-zA-ZÀ-ÿ\-\' ]+$/;
-
-    if(fullNameValue.length >= 2 && frFullNameRegex.test(fullNameValue)) {
-        setFullName(fullNameValue)
-        setFullNameIsValid(true)
-        setFullNameIsNotValid(false)
-    } else {
-        setFullName(null)
-        setFullNameIsValid(false)
-        setFullNameIsNotValid(true)
-    }
-}
-
-export function emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid) {
-    const emailValue = e.target.value
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(emailRegex.test(emailValue)) {
-        setEmail(emailValue)
-        setEmailIsValid(true)
-        setEmailIsNotValid(false)
-    } else {
-        setEmail(null)
-        setEmailIsValid(false)
-        setEmailIsNotValid(true)
-    }
-}
-
-function addressValidator(e, setAddress, setAddressIsValid, setAddressIsNotValid) {
-    const addressValue = e.target.value
-    const addressRegex = /^[0-9]+(?:[ ,.-][a-zA-ZÀ-ÿ0-9]+)+ (?:[0-9]{5}(?:-[0-9]{4})?|(?:[0-9]{5}(?:-[0-9]{4})? [a-zA-ZÀ-ÿ0-9]+))$/;
-    if(addressRegex.test(addressValue)) {
-        setAddress(addressValue)
-        setAddressIsValid(true)
-        setAddressIsNotValid(false)
-    } else {
-        setAddress(null)
-        setAddressIsValid(false)
-        setAddressIsNotValid(true)
-    }
-}
-
-export function passwordValidator(e, setPassword, setPasswordIsValid, setPasswordIsNotValid, setPasswordLength, setPasswordLowUp, setPasswordSymbol) {
-    const passwordValue = e.target.value
-    const isCorrectLength = has10Carac(passwordValue, setPasswordLength)
-    const isLowerAndUpper = hasLowerAndUpperCarac(passwordValue, setPasswordLowUp)
-    const isSymbol = containsSpecialSymbols(passwordValue, setPasswordSymbol)
-
-    if(isCorrectLength && isLowerAndUpper && isSymbol) {
-        setPassword(passwordValue)
-        setPasswordIsValid(true)
-        setPasswordIsNotValid(false)
-    } else {
-        setPassword(passwordValue)
-        setPasswordIsValid(false)
-        setPasswordIsNotValid(true)
-    }
-}
-
-export function phoneNumberValidator(e, setPhoneNumber, setPhoneNumberIsValid, setPhoneNumberIsNotValid) {
-    const phoneValue = e.target.value
-    const field = e.target
-    const phoneRegex = /^(0|\+33|\+330|0033)[67]\d{0,8}$/;
-
-    if (phoneValue.startsWith('+330')){
-        field.maxLength = 13;
-    } else if(phoneValue.startsWith('0')) {
-        field.maxLength = 10;
-    }
-
-    if(phoneRegex.test(phoneValue)) {
-        setPhoneNumber(phoneValue.replace(/^(0|\+330|0033)/, ''))
-        setPhoneNumberIsValid(true)
-        setPhoneNumberIsNotValid(false)
-    } else {
-        setPhoneNumber(null)
-        setPhoneNumberIsValid(false)
-        setPhoneNumberIsNotValid(true)
-    }
-}
-
-export function confirmPasswordValidator(e, password, passwordIsValid, setConfirmPassword, setConfirmPasswordIsValid, setConfirmPasswordIsNotValid) {
-    const confirmPasswordValue = e.target.value
-
-    if(confirmPasswordValue === password && passwordIsValid) {
-        setConfirmPassword(confirmPasswordValue)
-        setConfirmPasswordIsValid(true)
-        setConfirmPasswordIsNotValid(false)
-    } else {
-        setConfirmPassword(null)
-        setConfirmPasswordIsValid(false)
-        setConfirmPasswordIsNotValid(true)
-    }
-}
-
-function birthDateValidator(e, setBirthDate, setBirthDateIsValid, setBirthDateIsNotValid, setRequiredAge) {
-    const birthDateValue = new Date(e.target.value);
-
-    if (isNaN(birthDateValue.getTime())) {
-        setBirthDate(null)
-        setBirthDateIsValid(false)
-        setBirthDateIsNotValid(true)
-        setRequiredAge(false)
-        return;
-    }
-    const currentDate = new Date()
-    const requiredAge = currentDate.setFullYear(currentDate.getFullYear() - 18);
-
-    if(birthDateValue <= requiredAge) {
-        setBirthDate(birthDateValue.toLocaleDateString())
-        setBirthDateIsValid(true)
-        setBirthDateIsNotValid(false)
-        setRequiredAge(true)
-    } else {
-        setBirthDate(null)
-        setBirthDateIsValid(false)
-        setBirthDateIsNotValid(true)
-        setRequiredAge(false)
-    }
-}
-
-export function has10Carac(passwordValue, setPasswordLength) {
-    if(passwordValue.length >= 10) {
-        setPasswordLength(true)
-
-        return true;
-    } else {
-        setPasswordLength(false)
-
-        return false;
-    }
-}
-export function hasLowerAndUpperCarac(passwordValue, setPasswordLowUp) {
-    const lowerCaracRegex = /[A-Z]/;
-    const UpperCaracRegex = /[a-z]/;
-
-    if(lowerCaracRegex.test(passwordValue) && UpperCaracRegex.test(passwordValue)) {
-        setPasswordLowUp(true)
-
-        return true;
-    } else {
-        setPasswordLowUp(false)
-
-        return false;
-    }
+function convertStringToDateIso(birthDate) {
+    const parts = birthDate.split('/');
+    return parts[2] + '-' + parts[1] + '-' + parts[0];
 }
 
 
-export function containsSpecialSymbols(passwordValue, setPasswordSymbol) {
-    const symbolsRegex = /[!@#?]/g;
-    const symbolsMatch = passwordValue.match(symbolsRegex);
-
-    if (symbolsMatch && symbolsMatch.length >= 2) {
-        setPasswordSymbol(true);
-        return true;
-    } else {
-        setPasswordSymbol(false);
-        return false;
-    }
-}
 export default Register;
