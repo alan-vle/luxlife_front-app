@@ -10,10 +10,14 @@ import {logout} from "@/utils/auth.js";
 import {CurrentUserName} from "@/utils/CurrentUser.js";
 import userGreyBg from "@/assets/user-bg-grey.png";
 import {Link} from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router";
 
 function ProfileMenu() {
+    const [openMenu, setOpenMenu] = useState(false)
+    const goTo = useNavigate()
     return (
-        <Menu>
+        <Menu open={openMenu} handler={setOpenMenu} allowHover>
             <MenuHandler>
                 <div className={"flex justify-between cursor-pointer"}>
                     <div>
@@ -73,7 +77,7 @@ function ProfileMenu() {
                     </Typography>
                 </MenuItem>
                 <hr className="my-2 border-blue-gray-50" />
-                <MenuItem className="flex items-center gap-2" onClick={logout}>
+                <MenuItem className="flex items-center gap-2" onClick={() => logout(goTo)}>
                     <svg
                         width="16"
                         height="14"

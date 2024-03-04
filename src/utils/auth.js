@@ -1,15 +1,13 @@
 import {useEffect} from "react";
 import {useNavigate} from "react-router";
-const token = sessionStorage.getItem('token')
+const token = localStorage.getItem('auth')
 const isAuth = () => {
     return token !== undefined && token !== null
 }
 
-const logout = () => {
-    sessionStorage.removeItem('token')
-
-    const goTo = useNavigate()
-
+const logout = (goTo) => {
+    localStorage.removeItem('auth')
+    window.location = '/'
     goTo('/')
 }
 export {token, isAuth, logout}

@@ -3,10 +3,13 @@ import { Outlet, useNavigate } from 'react-router';
 
 const PrivateRoutes = () => {
     const goTo = useNavigate();
-    const token = sessionStorage.getItem('token') || null;
+    const token = localStorage.getItem('auth') || null;
 
     useEffect(() => {
         if (token === null) {
+            goTo('/login');
+        } else if(token.iat < Date.now()) {
+            localStorage.removeItem('auth')
             goTo('/login');
         }
     }, []);

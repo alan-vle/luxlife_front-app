@@ -6,7 +6,7 @@ PROJECT_DIR=src
 CURRENT_USER=sudo
 DOCKER_COMPOSE?=docker compose -f compose.dev.yaml
 DOCKER_COMPOSE_RUN=$(DOCKER_COMPOSE) run --rm
-DOCKER_EXEC_TOOLS_APP=$(CURRENT_USER) docker exec -it $(DOCKER_NAME) sh
+DOCKER_EXEC_TOOLS_APP=docker exec -it $(DOCKER_NAME) sh
 NODE_INSTALL="npm i"
 SERVER_RUN="npm run dev"
 
@@ -52,5 +52,6 @@ stop:
 
 restart: stop start dev
 
-clear: stop $(ROOT_DIR)/docker-compose.yml
+clear:
+	make stop $(ROOT_DIR)/compose.dev.yaml
 	$(DOCKER_COMPOSE) down -v --remove-orphans || true

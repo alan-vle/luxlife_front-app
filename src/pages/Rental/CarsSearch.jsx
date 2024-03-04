@@ -1,20 +1,26 @@
 import {useLocation} from "react-router";
 import {useEffect, useState} from "react";
-import {getAvailableCars} from "@/service/api/CarsService.jsx";
+import {getAllCars} from "@/service/api/CarsService.jsx";
 import Cars from "@/components/Cars/Cars.jsx";
 
 
-function CarsFound() {
+function CarsSearch() {
     const location = useLocation();
     const rentalFields = location.state
     const [cars, setCars] = useState(null)
+    const [paramFilter, setParamsFilter] = useState({agency: `/agencies/${rentalFields.agencyUuid}`})
 
     useEffect(() => {
         fetchCarsByAgency().then(result => setCars(result))
     }, []);
 
     async function fetchCarsByAgency() {
-        return await getAvailableCars(rentalFields.agencyUuid)
+        const params = {
+            status: 2,
+            ...paramFilter
+        }
+        console.log(params)
+        return await getAllCars(params)
     }
 
     return(
@@ -28,12 +34,10 @@ function CarsFound() {
                 <div className={"shadow-md"}>Au : {rentalFields.toDate}</div>
                 <div className={"shadow-md"}>à : {rentalFields.toTime}</div>
             </div>
-            <div className={"mt-8"}>
-                <Cars cars={cars} />
-            </div>
+            <div className={"mt-8"}><Cars cars={cars} /></div>
         </div>
 
 );
 }
 
-export default CarsFound;
+export default CarsSearch;

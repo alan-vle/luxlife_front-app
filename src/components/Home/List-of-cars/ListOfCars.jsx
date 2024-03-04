@@ -17,7 +17,7 @@ const ListOfCars = ({additionalContent}) => {
         return await getAllCars();
     }
 
-    return<Cars cars={cars} />;
+    return <Cars cars={cars} displayAgencies={true} choseMode={true}/>;
 }
 
 export default ListOfCars;

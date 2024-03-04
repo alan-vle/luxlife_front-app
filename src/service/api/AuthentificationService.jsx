@@ -46,7 +46,7 @@ const LoginService = (loginData, goTo) => {
             const token = response.data.token
 
             if(null !== token) {
-                sessionStorage.setItem("token", token)
+                localStorage.setItem('auth', token)
 
                 goTo('/', {replace: true})
                 goTo(0)

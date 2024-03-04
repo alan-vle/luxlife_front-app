@@ -1,29 +1,15 @@
 import axios from "axios";
-import {toast} from "react-toastify";
+import {errorNotif} from "@/utils/Notif.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function getAgenciesByCity(city) {
-    const params = {
-        city: city
-    };
-
+function getAllAgencies(params) {
     return axios.get(`${apiUrl}/agencies`, {params})
         .then(response => {
-            const data = response.data;
+            const data = response && response.data;
 
-            if (data !== null) {
-                return data;
-            } else {
-                return null;
-            }
+            return data && data;
         })
-        .catch(error => {
-            toast.error("An error occurred !", {
-                position: "top-center"
-            });
-
-            return null;
-        });
+        .catch(() => errorNotif());
 }
 
-export {getAgenciesByCity};
+export {getAllAgencies};

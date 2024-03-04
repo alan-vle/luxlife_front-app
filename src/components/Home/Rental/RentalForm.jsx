@@ -1,29 +1,35 @@
 import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
     Button, Input, Select, Option
 } from "@material-tailwind/react";
-import carImage from "../../../assets/button-car.png"
-import trafficJamImage from "../../../assets/traffic-jam.png"
 import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
-import {getAgenciesByCity} from "@/service/api/AgenciesService.jsx";
-import {Navigate, useNavigate} from "react-router";
-function RentalForm() {
-    const [fromAgency, setFromAgency] = useState(null);
-    const [agencyUuid, setAgencyUuid] = useState(null);
-    const [rentalType, setRentalType] = useState(null);
-    const [fromDate, setFromDate] = useState(null);
-    const [fromTime, setFromTime] = useState(null);
-    const [toAgency, setToAgency] = useState(null);
-    const [toDate, setToDate] = useState(null);
-    const [toTime, setToTime] = useState(null);
-    const [returnPlace, setReturnPlace] = useState(false);
-    const [fromSuggestions, setFromSuggestions] = useState(null);
-    const [toSuggestions, setToSuggestions] = useState(null);
+import {useNavigate} from "react-router";
+import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
+function RentalForm({
+    fromAgency: fromAgencyProp = null,
+    agencyUuid: agencyUuidProp = null,
+    rentalType: rentalTypeProp = null,
+    fromDate: fromDateProp = null,
+    fromTime: fromTimeProp = null,
+    toAgency: toAgencyProp = null,
+    toDate: toDateProp = null,
+    toTime: toTimeProp = null,
+    returnPlace: returnPlaceProp = false,
+    fromSuggestions: fromSuggestionsProp = null,
+    toSuggestions: toSuggestionsProp = null
+}) {
+    const [fromAgency, setFromAgency] = useState(fromAgencyProp);
+    const [agencyUuid, setAgencyUuid] = useState(agencyUuidProp);
+    const [rentalType, setRentalType] = useState(rentalTypeProp);
+    const [fromDate, setFromDate] = useState(fromDateProp);
+    const [fromTime, setFromTime] = useState(fromTimeProp);
+    const [toAgency, setToAgency] = useState(toAgencyProp);
+    const [toDate, setToDate] = useState(toDateProp);
+    const [toTime, setToTime] = useState(toTimeProp);
+    const [returnPlace, setReturnPlace] = useState(returnPlaceProp);
+    const [fromSuggestions, setFromSuggestions] = useState(fromSuggestionsProp);
+    const [toSuggestions, setToSuggestions] = useState(toSuggestionsProp);
     const suggestionsRef = useRef(null);
     const goTo = useNavigate();
 
@@ -39,13 +45,14 @@ function RentalForm() {
             toTime: toTime
         };
 
-        goTo('/cars-found', {state: rentalFields})
+        goTo('/cars/search-result', {state: rentalFields})
     }
+
     async function inputAgencyHandler(e, type) {
         const inputValue = e.target.value;
 
         if (inputValue.length >= 2) {
-            const foundAgencies = await getAgenciesByCity(inputValue)
+            const foundAgencies = await getAllAgencies({'city': inputValue})
             const notFoundMessage = "Aucune agence trouvée.";
 
             if (type === 'from') {
@@ -76,7 +83,7 @@ function RentalForm() {
     return (
         <>
             <form>
-                <div className="grid grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 gap-4">
                     <div>
                         <div  style={{ position: 'relative', display: 'inline-block' }}>
                             <Input size="md" label="Agence de départ" placeholder={"Marseille"}
@@ -85,11 +92,19 @@ function RentalForm() {
                                     value={`${fromAgency !== null ? fromAgency : ''}`}
                             />
                             {fromSuggestions !== null && (
-                                <div ref={suggestionsRef} style={{ position: 'absolute', top: '100%', left: 0, zIndex: 999, backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}>
+                                <div className={"w-fit h-fit"} ref={suggestionsRef} style={{
+                                        position: 'absolute',
+                                        top: '100%', left: 0,
+                                        zIndex: 999,
+                                        backgroundColor: '#fff',
+                                        border: '1px solid #ccc',
+                                        borderRadius: '4px'
+                                    }}
+                                >
                                     <ul>
                                         {Array.isArray(fromSuggestions) ?
                                             fromSuggestions.map((fromSuggestion, index) => (
-                                                <li key={index} onClick={() => {
+                                                <li key={index} className={"border border-b-8"} onClick={() => {
                                                         setFromAgency(fromSuggestion.city)
                                                         setAgencyUuid(fromSuggestion.uuid)
                                                         setFromSuggestions(null)
@@ -128,7 +143,7 @@ function RentalForm() {
                             {hoursGenerator()}
                         </Select>
                     </div>
-                    <div className="col-span-1.5">
+                    <div className=" col-span-1.5">
                         <Button className={"font-semibold"} variant="text"
                             onClick={() => {
                                 setReturnPlace(!returnPlace)

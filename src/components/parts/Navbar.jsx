@@ -32,6 +32,18 @@ function NavList() {
                 >
                     <Link to="/about-us" className="flex items-center hover:text-blue-500 transition-colors">A propos</Link>
                 </Typography>
+                {isAuth() && (
+                    <>
+                        <div className={"py-1.5 font-bold"}>|</div>
+                        <Typography
+                            as="a"
+                            variant="h6"
+                            className=" cursor-pointer py-1.5"
+                        >
+                            <Link to="/admin-area" className="flex items-center hover:text-blue-500 transition-colors">Espace d'administration</Link>
+                        </Typography>
+                    </>
+                )}
         </ul>
     );
 }

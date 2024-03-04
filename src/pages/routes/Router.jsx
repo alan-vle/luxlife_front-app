@@ -11,9 +11,10 @@ import ResetPassword from "../Account/ResetPassword.jsx";
 import About from "../About.jsx";
 import Footer from "../../components/parts/Footer.jsx";
 import Agencies from "../Agencies.jsx";
-import CarsFound from "@/pages/Rental/CarsFound.jsx";
+import CarsSearch from "@/pages/Rental/CarsSearch.jsx";
 import ConfirmEmail from "@/pages/Account/ConfirmEmail.jsx";
 import ForgotPassword from "@/pages/Account/ForgotPassword.jsx";
+import AdminArea from "@/pages/Area/Admin/AdminArea.jsx";
 
 const Router = () => {
     return (
@@ -29,8 +30,9 @@ const Router = () => {
                         <Route path="forgot-password" element={<ForgotPassword />} />
                         <Route path="reset-password/:token" element={<ResetPassword />} />
                         <Route path="agencies" element={<Agencies />} />
-                        <Route path="cars-found" element={<CarsFound />} />
+                        <Route path="/cars/search-result" element={<CarsSearch />} />
                         <Route element={<PrivateRoutes />}>
+                            <Route path="/admin-area" element={<AdminArea />} />
                             <Route path="account" element={<Account />} />
                         </Route>
                         <Route path="about-us" element={<About />} />
