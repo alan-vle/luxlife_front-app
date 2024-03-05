@@ -4,6 +4,7 @@ import {useNavigate} from "react-router";
 import {isAuth} from "@/utils/auth.js";
 import {OneFieldPassword, PasswordTooltips} from "@/utils/Forms/Password.jsx";
 import {confirmPasswordValidator, passwordValidator} from "@/utils/Forms/Validator/Validator.jsx";
+import {errorNotif} from "@/utils/Notif.js";
 
 const ResetPassword = () => {
     if(isAuth()) {
@@ -19,13 +20,14 @@ const ResetPassword = () => {
     const [visiblePasswordTooltips, setVisiblePasswordTooltips] = useState(false);
     const [passwordLength, setPasswordLength] = useState(false);
     const [passwordLowUp, setPasswordLowUp] = useState(false);
+    const [passwordNumber, setPasswordNumber] = useState(false);
     const [passwordSymbol, setPasswordSymbol] = useState(false);
     const goTo = useNavigate()
 
     const passwordHandler = (e) => {
         passwordValidator(
             e, setPassword, setPasswordIsValid, setPasswordIsNotValid,
-            setPasswordLength, setPasswordLowUp, setPasswordSymbol
+            setPasswordLength, setPasswordLowUp, setPasswordNumber, setPasswordSymbol
         )
     }
 
@@ -36,7 +38,12 @@ const ResetPassword = () => {
         )
     }
     const submitHandler = () => {
+        if(passwordIsValid && confirmPasswordIsValid) {
+            if(password !== confirmPassword) {
+                errorNotif('Vos mots de passes sont différents !', 'same-password')
+            }
 
+        }
     }
     return(
         <div className={"grid grid-cols-12 mt-28 mb-[300px]"}>
@@ -68,6 +75,7 @@ const ResetPassword = () => {
                                 <PasswordTooltips
                                     passwordLength={passwordLength}
                                     passwordLowUp={passwordLowUp}
+                                    passwordNumber={passwordNumber}
                                     passwordSymbol={passwordSymbol}
                                 />
                             }

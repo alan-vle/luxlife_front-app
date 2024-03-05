@@ -12,13 +12,14 @@ import AsyncSelect from "@/BugFixer/AsyncSelect.jsx";
 function Cars({
     cars: carsProp = null,
     displayAgencies,
+    agency: agencyProp = null,
     choseMode
 }) {
     const [cars, setCars] = useState(carsProp)
-    const [paramsFilter, setParamsFilter] = useState(null)
+    const [paramsFilter, setParamsFilter] = useState(agencyProp ? {agency: `/agencies/${agencyProp}` } : null)
     const [allManufacturers, setAllManufacturers] = useState(null)
     const [manufacturerValue, setManufacturerValue] = useState("*")
-    const [options, setOptions] = useState(null)
+
     useEffect(() => {
         if(null === allManufacturers) {
             fetchManufacturers().then(result => setAllManufacturers(result))
@@ -45,9 +46,7 @@ function Cars({
         } else {
             filterRemover('manufacturer', paramsFilter, setParamsFilter)
         }
-        alert(value)
         setManufacturerValue(value)
-        alert(manufacturerValue)
     }
     return (
         <div className={"mb-8"}>

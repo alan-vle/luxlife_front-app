@@ -7,6 +7,7 @@ const User = ({
     email,
     phoneNumber,
     agency,
+    displayAgency = true,
     index
 }) => {
     const classes = "p-4 border-b border-blue-gray-50";
@@ -40,15 +41,17 @@ const User = ({
                     0{phoneNumber}
                 </Typography>
             </td>
-            <td className={classes}>
-                <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                >
-                    {agency ? agency.city : 'Client'}
-                </Typography>
-            </td>
+            {displayAgency && (
+                <td className={classes}>
+                    <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                    >
+                        {agency ? agency.city : 'Client'}
+                    </Typography>
+                </td>
+            )}
             <td className={classes}>
                 <Typography
                     as="a"

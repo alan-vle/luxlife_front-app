@@ -10,29 +10,32 @@ const CurrentUserRoles = () => {
    return decodedToken.roles;
 }
 
-const IsAdmin = () => {
-    const filteredRolesByAdmin = CurrentUserRoles().filter(role => role === 'ROLE_ADMIN')
-
-
-    return filteredRolesByAdmin.length > 0;
-}
-
-const IsDirector = () => {
-    const filteredRolesByAdmin = CurrentUserRoles().filter(role => role === 'ROLE_DIRECTOR')
+const IsAdmin = (token = null) => {
+    const roles = !token ? CurrentUserRoles() : token
+    const filteredRolesByAdmin = roles.filter(role => role === 'ROLE_ADMIN')
 
     return filteredRolesByAdmin.length > 0;
 }
 
-const IsAgent = () => {
-    const filteredRolesByAdmin = CurrentUserRoles().filter(role => role === 'ROLE_AGENT')
+const IsDirector = (token = null) => {
+    const roles = !token ? CurrentUserRoles() : token
+    const filteredRolesByAdmin = roles.filter(role => role === 'ROLE_DIRECTOR')
 
     return filteredRolesByAdmin.length > 0;
 }
 
-const IsCustomer = () => {
-    const filteredRolesByAdmin = CurrentUserRoles().filter(role => role === 'ROLE_CUSTOMER')
+const IsAgent = (token = null) => {
+    const roles = !token ? CurrentUserRoles() : token
+    const filteredRolesByAdmin = roles.filter(role => role === 'ROLE_AGENT')
 
     return filteredRolesByAdmin.length > 0;
 }
 
-export {CurrentUserName, IsAdmin, IsDirector, IsAgent, IsCustomer}
+const IsCustomer = (token = null) => {
+    const roles = !token ? CurrentUserRoles() : token
+    const filteredRolesByAdmin = roles.filter(role => role === 'ROLE_CUSTOMER')
+
+    return filteredRolesByAdmin.length > 0;
+}
+
+export {CurrentUserName, CurrentUserRoles, IsAdmin, IsDirector, IsAgent, IsCustomer}

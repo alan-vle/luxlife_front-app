@@ -107,34 +107,37 @@ const Users = ({
                             Téléphone
                         </Typography>
                     </th>
-                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                        <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal leading-none opacity-70"
-                        >
-                            Agence
-                            <div className={"flex flex-row flex-wrap"}>
-                                <div>
-                                    <Select className={"bg-white"} label="Agence" onChange={roleHandler}>
-                                        <Option value={"*"}>Tous</Option>
-                                        <Option value={"admin"}>Admin</Option>
-                                        <Option value={"director"}>Directeur</Option>
-                                        <Option value={"agent"}>Agent</Option>
-                                        <Option value={"customer"}>Client</Option>
-                                    </Select>
+                    {null === agencyProp && (
+                        <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal leading-none opacity-70"
+                            >
+                                Agence
+                                <div className={"flex flex-row flex-wrap"}>
+                                    <div>
+                                        <Select className={"bg-white"} label="Agence" onChange={roleHandler}>
+                                            <Option value={"*"}>Tous</Option>
+                                            <Option value={"admin"}>Admin</Option>
+                                            <Option value={"director"}>Directeur</Option>
+                                            <Option value={"agent"}>Agent</Option>
+                                            <Option value={"customer"}>Client</Option>
+                                        </Select>
+                                    </div>
+                                    <div>
+                                        <Input
+                                            variant="outlined" label="Ville de l'agence"
+                                            placeholder="2 rue des cannetons"
+                                            className={"bg-white w-96"}
+                                            onChange={agencyHandler}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <Input
-                                        variant="outlined" label="Ville de l'agence"
-                                        placeholder="2 rue des cannetons"
-                                        className={"bg-white w-96"}
-                                        onChange={agencyHandler}
-                                    />
-                                </div>
-                            </div>
-                        </Typography>
-                    </th>
+                            </Typography>
+                        </th>
+                    )}
+
                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"></th>
                 </tr>
                 </thead>
@@ -143,7 +146,7 @@ const Users = ({
                     null === users ? <DefaultLoader /> : users.length === 0 ? (
                         <tr><td className={"text-left p-1 font-semibold"} colSpan={3}>Aucun utilisateur trouvé.</td></tr>
                     ) : (
-                        users.map((user, index) => <User key={index} {...user} index={index} />)
+                        users.map((user, index) => <User key={index} {...user} index={index} displayAgency={agencyProp && false} />)
                     )
                 }
                 </tbody>
