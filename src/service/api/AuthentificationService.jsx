@@ -1,6 +1,8 @@
 import axios from "axios";
 import {toast} from "react-toastify";
 import {errorNotif, successNotif} from "@/utils/Notif.js";
+import {IsAdmin, IsAgent, IsDirector} from "@/utils/CurrentUser.js";
+import {jwtDecode} from "jwt-decode";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const headers = {
@@ -43,12 +45,24 @@ const LoginService = (loginData, goTo) => {
 
     axios.post(`${apiUrl}/login`, loginData, {headers})
         .then(response => {
-            const token = response.data.token
-
+            const token = response && response.data.token
+            console.log(token)
             if(null !== token) {
                 localStorage.setItem('auth', token)
+                let pageToGo = '';
 
-                goTo('/', {replace: true})
+                const decodedToken = jwtDecode(token).roles
+                if(IsAdmin(decodedToken)) {
+                    pageToGo = '/admin-area'
+                } else if(IsDirector(decodedToken)) {
+                    pageToGo = '/my-agency'
+                } else if(IsAgent(decodedToken)) {
+                    pageToGo = '/'
+                } else {
+                    pageToGo = '/'
+                }
+
+                goTo(pageToGo, {replace: true})
                 goTo(0)
 
             } else {

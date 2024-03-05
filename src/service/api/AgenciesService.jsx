@@ -1,5 +1,6 @@
 import axios from "axios";
 import {errorNotif} from "@/utils/Notif.js";
+import {authorization} from "@/utils/ApiHeaders.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function getAllAgencies(params) {
@@ -12,4 +13,16 @@ function getAllAgencies(params) {
         .catch(() => errorNotif());
 }
 
-export {getAllAgencies};
+function getAgency(agencyUuid) {
+    return axios.get(`${apiUrl}/agencies/${agencyUuid}`, {headers: authorization})
+        .then(response => {
+            const data = response && response.data;
+
+            return data && data;
+        })
+        .catch(() => errorNotif())
+    ;
+}
+
+
+export {getAllAgencies, getAgency};
