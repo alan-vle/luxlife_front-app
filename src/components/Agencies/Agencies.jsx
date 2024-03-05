@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
 import DefaultLoader from "@/components/Loader/DefaultLoader.jsx";
+import Agency from "@/components/Agencies/Agency.jsx";
 
 const Agencies = () => {
     const [agencies, setAgencies] = useState(null)
@@ -52,7 +53,16 @@ const Agencies = () => {
                                 placeholder="2 rue des cannetons"
                                 className={"bg-white w-96"}
                                 onChange={(e) => addressCityHandler(e, 'address')}
-                            /> <br />
+                            />
+                        </Typography>
+
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                        >
                             Ville <br />
                             <Input
                                 variant="outlined" label="Ville"
@@ -61,14 +71,13 @@ const Agencies = () => {
                                 onChange={(e) => addressCityHandler(e, 'city')}
                             />
                         </Typography>
-
                     </th>
                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                         <Select variant="outlined" className={"bg-white"} label="Statut" onChange={statusHandler}>
                             <Option value={"*"}>Tous</Option>
-                            <Option value={1}>Active</Option>
-                            <Option value={0}>Fermée temporairement</Option>
-                            <Option value={2}>Définitivement temporairement</Option>
+                            <Option value={"1"}>Active</Option>
+                            <Option value={"0"}>Fermée temporairement</Option>
+                            <Option value={"2"}>Définitivement temporairement</Option>
                         </Select>
                     </th>
                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"></th>
@@ -78,47 +87,9 @@ const Agencies = () => {
                 {
                     !agencies ? <DefaultLoader /> :
                         0 === agencies.length ? (
-                            <tr><td className={"text-left p-1 font-semibold"} colSpan={"3"}>Aucune agence trouvé.</td></tr>
+                            <tr><td className={"text-left p-1 font-semibold"} colSpan={3}>Aucune agence trouvé.</td></tr>
                         ) : (
-                            agencies.map((agency, index) => {
-                                const isLast = index === agencies.length - 1;
-                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
-                                return (
-                                    <tr key={index}>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                <span className={"mb-8"}>{agency.address}</span> <br/>
-                                                {agency.city}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {agency.status}
-                                            </Typography>
-                                        </td>
-                                        <td className={classes}>
-                                            <Typography
-                                                as="a"
-                                                href="#"
-                                                variant="small"
-                                                color="blue-gray"
-                                                className="font-medium"
-                                            >
-                                                <FontAwesomeIcon icon={faPenToSquare} style={{color: "#e01b24"}}/>
-                                            </Typography>
-                                        </td>
-                                    </tr>
-                                );
-                            })
+                            agencies.map((agency, index) => (<Agency {...agency} index={index} tdMode={true} />))
                         )
                 }
                 </tbody>

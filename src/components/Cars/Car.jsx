@@ -1,6 +1,6 @@
 import {Button, Typography} from "@material-tailwind/react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock, faLocationDot} from "@fortawesome/free-solid-svg-icons";
+import {faClock, faLocationDot, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function Car({displayAgency = false, choseMode, manufacturer, model, contentUrl, kilometers, agency, uuid}) {
@@ -20,11 +20,15 @@ function Car({displayAgency = false, choseMode, manufacturer, model, contentUrl,
                     <span><FontAwesomeIcon icon={faClock} /> {agency.isOpen ? 'Ouverte' : 'Fermée'}</span>
                 </Typography>
             }
-            {choseMode && (
-                <div className={"flex justify-end"}>
-                    <Button type={"button"} onClick={() => alert(uuid)}>Choisir</Button>
-                </div>
-            )}
+            <div className={"flex justify-end"}>
+                {choseMode ? (<Button type={"button"} onClick={() => alert(uuid)}>Choisir</Button>)
+                    : (
+                        <Button type={"button"} variant={"text"} onClick={() => alert(uuid)}>
+                            <FontAwesomeIcon icon={faPenToSquare} size={"2xl"} style={{color: "#e01b24"}} />
+                        </Button>
+                    )
+                }
+            </div>
         </div>
 
     );

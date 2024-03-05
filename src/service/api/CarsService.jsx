@@ -15,4 +15,14 @@ function getAllCars(params) {
     ;
 }
 
-export {getAllCars}
+function getAllManufacturers() {
+    return axios.get(`${apiUrl}/manufacturers`)
+        .then(response => {
+            const data = response && response.data
+
+            return data && data;
+        })
+        .catch(() => errorNotif())
+    ;
+}
+export {getAllCars, getAllManufacturers}

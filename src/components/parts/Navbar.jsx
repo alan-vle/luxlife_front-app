@@ -12,6 +12,7 @@ import {faCircleUser} from "@fortawesome/free-regular-svg-icons";
 import luxlifeLogo from "@/assets/luxlife_logo.png";
 import {isAuth} from "@/utils/auth.js";
 import ProfileMenu from "@/components/parts/ProfileMenu.jsx";
+import {IsAdmin} from "@/utils/CurrentUser.js";
 function NavList() {
     return (
         <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -32,7 +33,7 @@ function NavList() {
                 >
                     <Link to="/about-us" className="flex items-center hover:text-blue-500 transition-colors">A propos</Link>
                 </Typography>
-                {isAuth() && (
+                {isAuth() && IsAdmin() && (
                     <>
                         <div className={"py-1.5 font-bold"}>|</div>
                         <Typography

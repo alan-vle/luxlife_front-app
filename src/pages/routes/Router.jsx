@@ -15,6 +15,7 @@ import CarsSearch from "@/pages/Rental/CarsSearch.jsx";
 import ConfirmEmail from "@/pages/Account/ConfirmEmail.jsx";
 import ForgotPassword from "@/pages/Account/ForgotPassword.jsx";
 import AdminArea from "@/pages/Area/Admin/AdminArea.jsx";
+import AdminRoutes from "@/pages/routes/AdminRoutes.jsx";
 
 const Router = () => {
     return (
@@ -32,8 +33,10 @@ const Router = () => {
                         <Route path="agencies" element={<Agencies />} />
                         <Route path="/cars/search-result" element={<CarsSearch />} />
                         <Route element={<PrivateRoutes />}>
-                            <Route path="/admin-area" element={<AdminArea />} />
                             <Route path="account" element={<Account />} />
+                        </Route>
+                        <Route element={<AdminRoutes />}>
+                            <Route path="/admin-area" element={<AdminArea />} />
                         </Route>
                         <Route path="about-us" element={<About />} />
                         <Route path="*" element={<NotFound />} />

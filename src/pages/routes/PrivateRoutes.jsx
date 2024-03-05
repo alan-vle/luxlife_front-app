@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router';
+import {jwtDecode} from "jwt-decode";
 
 const PrivateRoutes = () => {
     const goTo = useNavigate();
     const token = localStorage.getItem('auth') || null;
 
     useEffect(() => {
-        if (token === null) {
+        if (null === token) {
             goTo('/login');
-        } else if(token.iat < Date.now()) {
+        } else if(jwtDecode(token).exp < Date.now()) {
+            console.log('aa')
             localStorage.removeItem('auth')
             goTo('/login');
         }
