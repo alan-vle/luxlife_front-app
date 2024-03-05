@@ -82,6 +82,7 @@ export function Register() {
     const phoneNumberHandler = (e) => {
         phoneNumberValidator(e, setPhoneNumber, setPhoneNumberIsValid, setPhoneNumberIsNotValid)
     }
+
     const passwordHandler = (e) => {
         passwordValidator(
             e, setPassword, setPasswordIsValid, setPasswordIsNotValid,

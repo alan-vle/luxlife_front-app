@@ -9,12 +9,12 @@ const ProtectedRoute = ({ role }) => {
     useEffect(() => {
         if (null === token) {
             goTo('/login');
-        } else if (CurrentUserRoles()[0] !== role) {
+        } else if (role && CurrentUserRoles()[0] !== role) {
             goTo('/not-found');
         }
     }, []);
 
-    return CurrentUserRoles()[0] === role && <Outlet />;
+    return null === role || CurrentUserRoles()[0] === role && <Outlet />;
 }
 
 export default ProtectedRoute;

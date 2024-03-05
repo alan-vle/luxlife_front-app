@@ -33,7 +33,7 @@ const Router = () => {
                         <Route path="reset-password/:token" element={<ResetPassword />} />
                         <Route path="agencies" element={<Agencies />} />
                         <Route path="/cars/search-result" element={<CarsSearch />} />
-                        <Route element={<PrivateRoutes />}>
+                        <Route element={<ProtectedRoute role={null} />}>
                             <Route path="account" element={<Account />} />
                         </Route>
                         <Route element={<ProtectedRoute role={'ROLE_ADMIN'} />}>
@@ -42,9 +42,6 @@ const Router = () => {
                         <Route element={<ProtectedRoute role={'ROLE_DIRECTOR'} />}>
                             <Route path="/my-agency" element={<DirectorArea />}/>
                         </Route>
-                        {/*<Route element={<ProtectedRoute />} role={'ROLE_DIRECTOR'}>*/}
-                        {/*    <Route path="/admin-area" element={}/>*/}
-                        {/*</Route>*/}
                         <Route path="about-us" element={<About />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
