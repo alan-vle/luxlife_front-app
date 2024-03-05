@@ -1,6 +1,6 @@
 import { Typography } from "@material-tailwind/react";
 
-function ImageAndTextLoader() {
+const ImageAndTextLoader = () => {
   return (
     <div className="flex animate-pulse flex-wrap items-center gap-8">
       <div className="grid h-36 w-36 place-items-center rounded-lg bg-gray-300">

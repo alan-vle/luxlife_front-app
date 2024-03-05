@@ -2,7 +2,7 @@ import {Button, Card, CardBody, Typography} from "@material-tailwind/react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleChevronLeft, faCircleChevronRight} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
-import {getAllCars} from "@/service/CarsService.jsx";
+import {getAllCars} from "@/service/api/CarsService.jsx";
 import ImageAndTextLoader from "@/components/Loader/ImageAndTextLoader.jsx";
 import Cars from "@/components/Cars/Cars.jsx";
 
@@ -17,7 +17,7 @@ const ListOfCars = ({additionalContent}) => {
         return await getAllCars();
     }
 
-    return<Cars cars={cars} />;
+    return <Cars cars={cars} displayAgencies={true} choseMode={true}/>;
 }
 
 export default ListOfCars;
