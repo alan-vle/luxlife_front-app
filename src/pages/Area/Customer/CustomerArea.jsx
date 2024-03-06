@@ -16,8 +16,8 @@ import MainBlock from "@/components/parts/MainBlock.jsx";
 
 const CustomerArea = () => {
     return (
-        <Tabs value="current-location" className={"w-full ml-8 p-2 mt-8 mb-96"}>
-            <TabsHeader className={"flex place-items-center w-fit flex flex-col md:flex-row lg:flex-row"}>
+        <Tabs value="current-location" className={"w-full ml-8 mt-8 mb-96"}>
+            <TabsHeader className={"flex place-items-center w-fit flex flex-col md:flex-row lg:flex-row p-2"}>
                     <Tab value={"current-location"} className={"w-96"}>
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon icon={faLandmark} className={"w-5 h-5"}/>
@@ -44,17 +44,17 @@ const CustomerArea = () => {
                     </div>
                 </Tab>
             </TabsHeader>
-            <TabsBody className={"pl-8"}>
-                <TabPanel value={'current-location'}>
+            <TabsBody>
+                <TabPanel value={'current-location'} className={"pl-9"}>
                     <p>Current location</p>
                 </TabPanel>
-                <TabPanel value={'rentals-history'}>
+                <TabPanel value={'rentals-history'} className={"pl-9"}>
                     <p>Location history</p>
                 </TabPanel>
-                <TabPanel value={"new-rental"}>
+                <TabPanel value={"new-rental"} className={"w-full"}>
                     <MainBlock />
                 </TabPanel>
-                <TabPanel value={"complaints"}>
+                <TabPanel value={"complaints"} className={"pl-9"}>
                     Réclam
                 </TabPanel>
             </TabsBody>
