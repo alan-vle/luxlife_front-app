@@ -18,6 +18,7 @@ import AdminArea from "@/pages/Area/Admin/AdminArea.jsx";
 import ProtectedRoute from "@/pages/routes/ProtectedRoute.jsx";
 import DirectorArea from "@/pages/Area/Director/DirectorArea.jsx";
 import AgentArea from "@/pages/Area/Agent/AgentArea.jsx";
+import CustomerArea from "@/pages/Area/Customer/CustomerArea.jsx";
 
 const Router = () => {
     return (
@@ -27,24 +28,27 @@ const Router = () => {
                     <Header />
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="login" element={<Login />} />
-                        <Route path="register" element={<Register />} />
-                        <Route path="confirm-email/:uuid" element={<ConfirmEmail />} />
-                        <Route path="forgot-password" element={<ForgotPassword />} />
-                        <Route path="reset-password/:token" element={<ResetPassword />} />
-                        <Route path="agencies" element={<Agencies />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/confirm-email/:uuid" element={<ConfirmEmail />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/reset-password/:token" element={<ResetPassword />} />
+                        <Route path="/agencies" element={<Agencies />} />
                         <Route path="/cars/search-result" element={<CarsSearch />} />
                         <Route element={<ProtectedRoute role={null} />}>
-                            <Route path="account" element={<Account />} />
+                            <Route path="/account" element={<Account />} />
                         </Route>
                         <Route element={<ProtectedRoute role={'ROLE_ADMIN'} />}>
-                            <Route path="/admin-area" element={<AdminArea />}/>
+                            <Route path="/admin" element={<AdminArea />}/>
                         </Route>
                         <Route element={<ProtectedRoute role={'ROLE_DIRECTOR'} />}>
                             <Route path="/my-agency" element={<DirectorArea />}/>
                         </Route>
                         <Route element={<ProtectedRoute role={'ROLE_AGENT'} />}>
-                            <Route path="/dashboard" element={<AgentArea />}/>
+                            <Route path="/agent/dashboard" element={<AgentArea />}/>
+                        </Route>
+                        <Route element={<ProtectedRoute role={'ROLE_CUSTOMER'} />}>
+                            <Route path="/dashboard" element={<CustomerArea />}/>
                         </Route>
                         <Route path="about-us" element={<About />} />
                         <Route path="*" element={<NotFound />} />

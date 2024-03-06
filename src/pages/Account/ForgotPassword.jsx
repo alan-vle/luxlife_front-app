@@ -31,8 +31,8 @@ const ForgotPassword = () => {
     }
     return(
         <div className={"grid grid-cols-12 mt-28 mb-[300px]"}>
-            <div className={"col-span-4"}></div>
-            <div className={"col-span-4"}>
+            <div className={"md:col-span-4 lg:col-span-4"}></div>
+            <div className={"col-span-12 md:col-span-4 lg:col-span-4"}>
                 <Card>
                     <CardBody>
                         <div className={"grid grid-cols-3 "}>
@@ -52,7 +52,6 @@ const ForgotPassword = () => {
                 </Card>
             </div>
             <div className={"col-span-4"}></div>
-
         </div>
     );
 }

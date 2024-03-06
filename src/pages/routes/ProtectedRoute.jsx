@@ -19,9 +19,8 @@ const ProtectedRoute = ({ role }) => {
             goTo('/login');
         }
 
-        if (token && role && CurrentUserRoles()[0] !== role) {
+        if (role && CurrentUserRoles()[0] !== role) {
             goTo('/not-found');
-
         }
     }, []);
 

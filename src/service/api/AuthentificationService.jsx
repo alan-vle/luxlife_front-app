@@ -53,13 +53,13 @@ const LoginService = (loginData, goTo) => {
 
                 const decodedToken = jwtDecode(token).roles
                 if(IsAdmin(decodedToken)) {
-                    pageToGo = '/admin-area'
+                    pageToGo = '/admin'
                 } else if(IsDirector(decodedToken)) {
                     pageToGo = '/my-agency'
                 } else if(IsAgent(decodedToken)) {
-                    pageToGo = '/dashboard'
+                    pageToGo = '/agent/dashboard'
                 } else {
-                    pageToGo = '/'
+                    pageToGo = '/dashboard'
                 }
 
                 goTo(pageToGo, {replace: true})

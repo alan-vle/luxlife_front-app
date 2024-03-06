@@ -120,12 +120,12 @@ export function Register() {
 
     return (
         <div className={"grid grid-cols-12 mt-28 mb-28"}>
-            <div className={"col-span-3"}></div>
-            <div className={"col-span-6 flex justify-center w-full h-auto"}>
+            <div className={"md:col-span-3 lg:col-span-3"}></div>
+            <div className={"col-span-12 md:col-span-6 lg:col-span-6 flex justify-center w-full h-auto"}>
                 <Card>
                     <CardBody>
                         <Typography className={"text-black font-extrabold text-[40px]"}>Rejoignez nous en devenant client !</Typography>
-                        <div className={"grid grid-cols-2 gap-2 mt-8 placeholder:text-slate-400"}>
+                        <div className={"grid md:grid-cols-2 lg:grid-cols-2 flex flex-col gap-2 mt-8 placeholder:text-slate-400 w-full"}>
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
                                    onChange={fullNameHandler}
@@ -155,7 +155,7 @@ export function Register() {
                                    maxLength={10}
                                 />
                             </div>
-                            <div className={"mb-4"}>
+                            <div className={"mb-4 w-full"}>
                                 <OneFieldPassword
                                     onChange={passwordHandler}
                                     onFocus={() => setVisiblePasswordTooltips(true)}
@@ -164,7 +164,7 @@ export function Register() {
                                     error={passwordIsNotValid}
                                 />
                             </div>
-                            <div className={"mb-4"}>
+                            <div className={"mb-4 w-full"}>
                                 <OneFieldPassword label={"Confirmez votre mot de passe"}
                                     onChange={confirmPasswordHandler}
                                     success={confirmPasswordIsValid}

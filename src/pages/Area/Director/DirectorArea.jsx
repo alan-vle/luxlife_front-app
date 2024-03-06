@@ -25,8 +25,8 @@ const DirectorArea = () => {
         return await getAgency(agencyUuid);
     }
     return (
-        <Tabs value="agency" className={"w-full p-2 mt-8 mb-96"}>
-            <TabsHeader className={"flex place-items-center w-fit"}>
+        <Tabs value="agency" className={"w-full p-2 mt-8 ml-8 mb-96"}>
+            <TabsHeader className={"flex place-items-center w-fit flex flex-col md:flex-row lg:flex-row"}>
                 <Tab value={"agency"} className={"w-96"}>
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon icon={faLandmark} className={"w-5 h-5"}/>

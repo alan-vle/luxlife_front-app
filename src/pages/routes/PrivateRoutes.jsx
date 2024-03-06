@@ -10,7 +10,6 @@ const PrivateRoutes = () => {
         if (null === token) {
             goTo('/login');
         } else if(jwtDecode(token).exp < Date.now()) {
-            console.log('aa')
             localStorage.removeItem('auth')
             goTo('/login');
         }

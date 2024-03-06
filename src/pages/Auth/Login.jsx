@@ -39,11 +39,11 @@ const Login = () => {
     }
     return(
         <div className={"grid grid-cols-12 mt-28 mb-28"}>
-            <div className={"lg:col-span-5"}></div>
-            <div className={"lg:col-span-2 sm:col-span-12"}>
+            <div className={"md:col-span-4 lg:col-span-4"}></div>
+            <div className={"col-span-12 md:col-span-4 lg:col-span-4 w-fit"}>
                 <Card>
                     <CardBody>
-                        <div className={"grid grid-cols-2 flex justify-center"}>
+                        <div className={"grid grid-cols-2 flex justify-center p-2 w-96"}>
                             <div className={"col-span-2 mt-4"}>
                                 <Typography as="h2" className={"text-black font-extrabold text-[40px]"}>
                                     Accédez à votre espace
