@@ -17,6 +17,7 @@ import ForgotPassword from "@/pages/Account/ForgotPassword.jsx";
 import AdminArea from "@/pages/Area/Admin/AdminArea.jsx";
 import ProtectedRoute from "@/pages/routes/ProtectedRoute.jsx";
 import DirectorArea from "@/pages/Area/Director/DirectorArea.jsx";
+import AgentArea from "@/pages/Area/Agent/AgentArea.jsx";
 
 const Router = () => {
     return (
@@ -41,6 +42,9 @@ const Router = () => {
                         </Route>
                         <Route element={<ProtectedRoute role={'ROLE_DIRECTOR'} />}>
                             <Route path="/my-agency" element={<DirectorArea />}/>
+                        </Route>
+                        <Route element={<ProtectedRoute role={'ROLE_AGENT'} />}>
+                            <Route path="/dashboard" element={<AgentArea />}/>
                         </Route>
                         <Route path="about-us" element={<About />} />
                         <Route path="*" element={<NotFound />} />

@@ -17,8 +17,6 @@ const DirectorArea = () => {
 
     useEffect(() => {
         if(null === agency) {
-
-
             fetchAgency(agencyUuid).then(result => setAgency(result))
         }
     }, [])
