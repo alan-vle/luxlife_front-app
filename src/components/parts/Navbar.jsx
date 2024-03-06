@@ -113,7 +113,7 @@ function NavbarSimple() {
                                         variant="h6"
                                         className="cursor-pointer py-1.5"
                                     >
-                                        <Link to="/admin-area" className="flex items-center hover:text-blue-500 transition-colors">Espace d'administration</Link>
+                                        <Link to="/admin" className="flex items-center hover:text-blue-500 transition-colors">Espace d'administration</Link>
                                     </Typography>
                                     <div className="py-1.5 font-bold ml-2 mr-2">|</div>
                                 </>
@@ -128,14 +128,14 @@ function NavbarSimple() {
                                     </Typography>
                                     <div className="py-1.5 font-bold ml-2 mr-2">|</div>
                                 </>
-                            ) : IsAgent() ? (
+                            ) : IsAgent() || IsCustomer() ? (
                                 <>
                                     <Typography
                                         as="a"
                                         variant="h6"
                                         className="cursor-pointer py-1.5"
                                     >
-                                        <Link to="/dashboard" className="flex items-center hover:text-blue-500 transition-colors">Tableaux de bord</Link>
+                                        <Link to={`${IsAgent() ? '/agent' : ''}/dashboard`} className="flex items-center hover:text-blue-500 transition-colors">Tableaux de bord</Link>
                                     </Typography>
                                     <div className="py-1.5 font-bold ml-2 mr-2">|</div>
                                 </>

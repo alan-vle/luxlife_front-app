@@ -19,7 +19,7 @@ function CarsSearch() {
             status: 2,
             ...paramFilter
         }
-        console.log(params)
+
         return await getAllCars(params)
     }
 

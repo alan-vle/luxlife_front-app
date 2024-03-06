@@ -5,7 +5,6 @@ import {errorNotif} from "@/utils/Notif.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function getAllCars(params) {
-    console.log(params)
     return axios.get(`${apiUrl}/cars`, {params})
         .then(response => {
             const data = response && response.data;
