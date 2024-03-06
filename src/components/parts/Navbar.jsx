@@ -12,50 +12,31 @@ import {faCircleUser} from "@fortawesome/free-regular-svg-icons";
 import luxlifeLogo from "@/assets/luxlife_logo.png";
 import {isAuth} from "@/utils/auth.js";
 import ProfileMenu from "@/components/parts/ProfileMenu.jsx";
-import {IsAdmin, IsDirector} from "@/utils/CurrentUser.js";
+import {IsAdmin, IsAgent, IsCustomer, IsDirector} from "@/utils/CurrentUser.js";
 function NavList() {
     return (
         <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-                <Typography
-                    as="a"
-                    variant="h6"
-                    className="cursor-pointer py-1.5"
-                >
-                    <Link to="/agencies" className="flex items-center hover:text-blue-500 transition-colors">
-                        Nos agences
-                    </Link>
-                </Typography>
-                <div className={"py-1.5 font-bold"}>|</div>
-                <Typography
-                    as="a"
-                    variant="h6"
-                    className=" cursor-pointer py-1.5"
-                >
-                    <Link to="/about-us" className="flex items-center hover:text-blue-500 transition-colors">A propos</Link>
-                </Typography>
-                {isAuth() ? IsAdmin() ? (
-                    <>
-                        <div className={"py-1.5 font-bold"}>|</div>
-                        <Typography
-                            as="a"
-                            variant="h6"
-                            className=" cursor-pointer py-1.5"
-                        >
-                            <Link to="/admin-area" className="flex items-center hover:text-blue-500 transition-colors">Espace d'administration</Link>
-                        </Typography>
-                    </>
-                ) : IsDirector() ? (
-                    <>
-                        <div className={"py-1.5 font-bold"}>|</div>
-                        <Typography
-                            as="a"
-                            variant="h6"
-                            className=" cursor-pointer py-1.5"
-                        >
-                            <Link to="/my-agency" className="flex items-center hover:text-blue-500 transition-colors">Mon agence</Link>
-                        </Typography>
-                    </>
-                ) : '' : ''}
+            {(!isAuth() || IsCustomer()) && (
+                <>
+                    <Typography
+                        as="a"
+                        variant="h6"
+                        className="cursor-pointer py-1.5"
+                    >
+                        <Link to="/agencies" className="flex items-center hover:text-blue-500 transition-colors">
+                            Nos agences
+                        </Link>
+                    </Typography>
+                    <div className={"py-1.5 font-bold"}>|</div>
+                    <Typography
+                        as="a"
+                        variant="h6"
+                        className=" cursor-pointer py-1.5"
+                    >
+                        <Link to="/about-us" className="flex items-center hover:text-blue-500 transition-colors">A propos</Link>
+                    </Typography>
+                </>
+            )}
         </ul>
     );
 }
@@ -76,35 +57,36 @@ function NavbarSimple() {
 
     return (
         <Navbar className="mx-auto px-6 py-3" fullWidth={true}>
-            <div className="flex items-center justify-between text-blue-gray-900">
-                <div className="hidden lg:block">
+            <div className="flex grid grid-cols-12 items-center text-blue-gray-900">
+                <div className="hidden lg:block col-span-4">
                     <NavList />
                 </div>
-                <div className="hidden lg:flex items-center justify-center">
+                <div className="hidden lg:flex items-center justify-center col-span-4">
                     <Link to="/" className={"w-[200px] h-[150px] absolute"}>
                         <img src={luxlifeLogo} alt="Luxlife logo" className=""/>
                     </Link>
                 </div>
-                {!isAuth() ? (
+                <div className={"col-span-4 flex justify-end items-center"}>
+                    {!isAuth() ? (
                         <>
                             <div className="hidden gap-2 lg:flex">
-                                <FontAwesomeIcon icon={faCircleUser} className={"py-2"} size={"lg"}/>
+                                <FontAwesomeIcon icon={faCircleUser} className="py-2" size="lg" />
                                 <Typography
                                     as="a"
                                     variant="h6"
                                     className="cursor-pointer py-1.5"
                                 >
-                                    <Link to={"/login"} className="flex items-center hover:text-blue-500 transition-colors">
+                                    <Link to="/login" className="flex items-center hover:text-blue-500 transition-colors">
                                         Connexion
                                     </Link>
                                 </Typography>
-                                <div className={"py-1.5 font-bold"}>|</div>
+                                <div className="py-1.5 font-bold">|</div>
                                 <Typography
                                     as="a"
                                     variant="h6"
                                     className="cursor-pointer py-1.5"
                                 >
-                                    <Link to={"/register"} className="flex items-center hover:text-blue-500 transition-colors">
+                                    <Link to="/register" className="flex items-center hover:text-blue-500 transition-colors">
                                         Inscription
                                     </Link>
                                 </Typography>
@@ -122,10 +104,46 @@ function NavbarSimple() {
                                 )}
                             </IconButton>
                         </>
-                    )
-                    : <div className={"mr-8"}><ProfileMenu /></div>
-                }
-
+                    ) : (
+                        <>
+                            {IsAdmin() ? (
+                                <>
+                                    <Typography
+                                        as="a"
+                                        variant="h6"
+                                        className="cursor-pointer py-1.5"
+                                    >
+                                        <Link to="/admin-area" className="flex items-center hover:text-blue-500 transition-colors">Espace d'administration</Link>
+                                    </Typography>
+                                    <div className="py-1.5 font-bold ml-2 mr-2">|</div>
+                                </>
+                            ) : IsDirector() ? (
+                                <>
+                                    <Typography
+                                        as="a"
+                                        variant="h6"
+                                        className="cursor-pointer py-1.5"
+                                    >
+                                        <Link to="/my-agency" className="flex items-center hover:text-blue-500 transition-colors">Mon agence</Link>
+                                    </Typography>
+                                    <div className="py-1.5 font-bold ml-2 mr-2">|</div>
+                                </>
+                            ) : IsAgent() ? (
+                                <>
+                                    <Typography
+                                        as="a"
+                                        variant="h6"
+                                        className="cursor-pointer py-1.5"
+                                    >
+                                        <Link to="/dashboard" className="flex items-center hover:text-blue-500 transition-colors">Tableaux de bord</Link>
+                                    </Typography>
+                                    <div className="py-1.5 font-bold ml-2 mr-2">|</div>
+                                </>
+                            ) : ''}
+                            <div className="mr-8"><ProfileMenu /></div>
+                        </>
+                    )}
+                </div>
             </div>
             <Collapse open={openNav} className={"text-blue-gray-900"}>
                 <NavList />

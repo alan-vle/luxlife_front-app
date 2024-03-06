@@ -5,12 +5,28 @@ import {Link} from "react-router-dom";
 import mailboxImage from "../../assets/mailbox.png"
 import manHelperImage from "../../assets/man-helper.png"
 import NewsletterBlock from "@/components/parts/NewsletterBlock.jsx";
+import {useEffect, useState} from "react";
+import {useLocation} from "react-router";
 export function Footer() {
+    const [displayNewsletter, setDisplayNewsletter] = useState(true)
+    const location = useLocation();
+    const {pathname} = location;
+
+    useEffect(() => {
+        if(
+            pathname === '/account' || pathname === '/admin-area'
+            || pathname === '/my-agency' || pathname === '/dashboard'
+        ) {
+            setDisplayNewsletter(false)
+        }
+    })
+
+
     return (
         <>
             <div className="grid grid-cols-4 gap-4">
                 <div></div>
-                <div className="col-span-2"><NewsletterBlock /></div>
+                <div className="col-span-2"><div className={false === displayNewsletter ? 'hidden' : ''}><NewsletterBlock /></div></div>
                 <div className="flex justify-end items-end pr-8">
                     <Button variant={"text"} onClick={() => alert('Do you need help? Ok')}><img src={manHelperImage} alt=""/></Button>
                 </div>

@@ -46,7 +46,7 @@ const LoginService = (loginData, goTo) => {
     axios.post(`${apiUrl}/login`, loginData, {headers})
         .then(response => {
             const token = response && response.data.token
-            console.log(token)
+
             if(null !== token) {
                 localStorage.setItem('auth', token)
                 let pageToGo = '';
@@ -57,7 +57,7 @@ const LoginService = (loginData, goTo) => {
                 } else if(IsDirector(decodedToken)) {
                     pageToGo = '/my-agency'
                 } else if(IsAgent(decodedToken)) {
-                    pageToGo = '/'
+                    pageToGo = '/dashboard'
                 } else {
                     pageToGo = '/'
                 }
