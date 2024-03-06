@@ -78,7 +78,6 @@ function Cars({
                         )
                     }
                 </div>
-
             </div>
             <div className={"grid grid-cols-1 flex flex-col md:grid-cols-4 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8"}>
                 {

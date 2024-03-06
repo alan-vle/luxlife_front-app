@@ -1,6 +1,17 @@
-import {Card, Select, Option, Typography, Spinner, Input} from "@material-tailwind/react";
+import {
+    Card,
+    Select,
+    Option,
+    Typography,
+    Spinner,
+    Input,
+    CardBody,
+    List,
+    ListItem,
+    Button, CardFooter, CardHeader
+} from "@material-tailwind/react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import {faClock, faLocationDot, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
@@ -98,4 +109,73 @@ const Agencies = () => {
     );
 }
 
-export default Agencies;
+const ListOfAgencies = () => {
+    const [agencies, setAgencies] = useState(null)
+    const [paramsFilter, setParamsFilter] = useState(null)
+    const [agency, setAgency] = useState(null)
+    const [agencyInputValue, setAgencyInputValue] = useState(null)
+
+    useEffect(() => {
+        if(paramsFilter !== null) {
+            fetchAgencies().then(result => setAgencies(result));
+        } else {
+            setAgencies(null)
+        }
+    }, [paramsFilter]);
+
+    async function fetchAgencies() {
+        return await getAllAgencies(paramsFilter);
+    }
+
+    const agencyHandler = (e) => {
+        const agencyValue = e.target.value;
+        setAgencyInputValue(agencyValue)
+        if(agencyValue.length >= 2) {
+            filterUpdater('city', agencyValue, setParamsFilter)
+        } else {
+            setParamsFilter(null)
+        }
+    }
+    return (
+        <div className={"grid grid-cols-12 gap-2 mt-24 mb-48 justify-center"}>
+            <div className={"lg:col-start-4 lg:col-span-6 col-span-12 shadow-lg rounded-lg p-8 flex flex-wrap justify-between gap-8"}>
+                <Card className="w-96 h-fit">
+                    <Input
+                        label="Rechercher une agence" placeholder={"13400, Aubagne"}
+                        onChange={agencyHandler} value={`${agencyInputValue !== null ? agencyInputValue : ''}`}
+                    />
+
+                    {agencies && agencies.map((agency, index) => (
+                        <List key={index} className={"border border-b-gray"}>
+                            <Button type={"button"} variant={"text"} onClick={() => {
+                                setAgency(agency)
+                                setAgencyInputValue(agency.city)
+                                setParamsFilter(null)
+                            }}>{agency.city}</Button>
+                        </List>
+                    ))}
+                </Card>
+                {agency && (
+                    <Card className="w-96 mt-8">
+                        <CardHeader color="blue-gray" className="relative h-56" children={""}></CardHeader>
+                        <CardBody>
+                            <Typography variant="h5" color="blue-gray" className="mb-2">
+                                <FontAwesomeIcon icon={faLocationDot} /> {agency.address} {agency.city}
+                            </Typography>
+                            <Typography>
+                                <FontAwesomeIcon icon={faClock} /> {agency.isOpen ? 'Ouverte' : 'Fermée'} <br />
+                                Horaires : <br />
+                                {agency.openingHours} - {agency.closingHours}
+                            </Typography>
+                        </CardBody>
+                        <CardFooter className="pt-0 flex justify-between">
+                            <Button type={"button"}>Voir les voitures disponibles</Button>
+                        </CardFooter>
+                    </Card>
+                )}
+            </div>
+        </div>
+    )
+}
+
+export {Agencies, ListOfAgencies};
