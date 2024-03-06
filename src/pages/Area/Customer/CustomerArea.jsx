@@ -17,7 +17,7 @@ import MainBlock from "@/components/parts/MainBlock.jsx";
 const CustomerArea = () => {
     return (
         <Tabs value="current-location" className={"w-full ml-8 p-2 mt-8 mb-96"}>
-            <TabsHeader className={"flex place-items-center w-fit"}>
+            <TabsHeader className={"flex place-items-center w-fit flex flex-col md:flex-row lg:flex-row"}>
                     <Tab value={"current-location"} className={"w-96"}>
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon icon={faLandmark} className={"w-5 h-5"}/>
