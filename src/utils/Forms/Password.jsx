@@ -16,7 +16,7 @@ const OneFieldPassword = ({
 
     return(
         <div>
-            <div className="relative flex w-full max-w-[24rem]">
+            <div className="relative flex w-full">
                 <Input label={label} ref={ref} type={eyeVisible ? "text" : "password"}
                        placeholder={"**********"} onChange={onChange} onFocus={onFocus} onBlur={onBlur}
                        success={success} error={error}
