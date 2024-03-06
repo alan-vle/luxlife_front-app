@@ -42,7 +42,7 @@ export function Footer() {
                             color="blue-gray"
                             className="font-normal transition-colors hover:text-blue-500 focus:text-blue-500"
                         >
-                            <Link to={"/about-us"}>A propos de nous </Link>
+                            <Link to={"/about-us"}>A propos de nous</Link>
                         </Typography>
                     </li>
                     <li>

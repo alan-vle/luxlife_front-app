@@ -46,12 +46,13 @@ function Cars({
         } else {
             filterRemover('manufacturer', paramsFilter, setParamsFilter)
         }
+
         setManufacturerValue(value)
     }
     return (
         <div className={"mb-8"}>
-            <div className={"grid grid-cols-4"}>
-                <div className="w-28">
+            <div className={"grid md:grid-cols-8 lg:grid-cols-8 pl-8 mb-8 flex flex-col gap-2"}>
+                <div>
                     {allManufacturers && (
                         <Select variant="outlined" label="Fabriquant" onChange={manufacturerHandler} value={manufacturerValue}>
                             <Option value="*">Tous</Option>
@@ -79,7 +80,7 @@ function Cars({
                 </div>
 
             </div>
-            <div className={"grid grid-cols-1 md:grid-cols-8 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8"}>
+            <div className={"grid grid-cols-1 flex flex-col md:grid-cols-4 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8"}>
                 {
                     null === cars ? <ImageAndTextLoader />
                         : cars.length === 0 ? (
@@ -89,9 +90,9 @@ function Cars({
                             )
                 }
             </div>
-            <div className={"grid justify-items-center"}>
-                <Pagination pageMax={8} />
-            </div>
+            {/*<div className={"grid justify-items-center"}>*/}
+            {/*    <Pagination pageMax={8} />*/}
+            {/*</div>*/}
         </div>
     );
 }
