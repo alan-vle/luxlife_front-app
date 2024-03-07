@@ -2,6 +2,8 @@ import {useLocation} from "react-router";
 import {useEffect, useState} from "react";
 import {getAllCars} from "@/service/api/CarsService.jsx";
 import Cars from "@/components/Cars/Cars.jsx";
+import RentalForm from "@/components/Home/Rental/RentalForm.jsx";
+import {Card, CardBody} from "@material-tailwind/react";
 
 
 function CarsSearch() {
@@ -12,7 +14,7 @@ function CarsSearch() {
 
     useEffect(() => {
         fetchCarsByAgency().then(result => setCars(result))
-    }, []);
+    }, [paramFilter]);
 
     async function fetchCarsByAgency() {
         const params = {
@@ -24,18 +26,27 @@ function CarsSearch() {
     }
 
     return(
-        <div>
-            <div className={"grid grid-cols-8 mt-8 mb-48"}>
-                <div className={"shadow-md"}>Agency de départ : {rentalFields.fromAgency}</div>
-                <div className={"shadow-md"}>Type de location : {rentalFields.rentalType === 0 ? "Classique" :  "LLD"}</div>
-                <div className={"shadow-md"}>Du : {rentalFields.fromDate}</div>
-                <div className={"shadow-md"}>à : {rentalFields.fromTime}</div>
-                {null !== rentalFields.toAgency && (<div className={"shadow-md"}>Agence de retour : {rentalFields.toAgency}</div>)}
-                <div className={"shadow-md"}>Au : {rentalFields.toDate}</div>
-                <div className={"shadow-md"}>à : {rentalFields.toTime}</div>
+        <>
+            <div className={"grid grid-cols-12 mt-8 mb-48 w-full"}>
+                <div className="col-start-2 col-span-8">
+                    <Card>
+                        <CardBody>
+                            <RentalForm
+                                fromAgency={rentalFields.fromAgency}
+                                agencyUuid={rentalFields.agencyUuid}
+                                rentalType={rentalFields.rentalType}
+                                fromDate={rentalFields.fromDate}
+                                fromTime={rentalFields.fromTime}
+                                toAgency={rentalFields.toAgency}
+                                toDate={rentalFields.toDate}
+                                toTime={rentalFields.toTime}
+                            />
+                        </CardBody>
+                    </Card>
+                </div>
             </div>
-            <div className={"mt-8"}><Cars cars={cars} choseMode={true}/></div>
-        </div>
+            <div className={"mt-8"}><Cars choseMode={true} agency={rentalFields.agencyUuid}/></div>
+        </>
 
 );
 }

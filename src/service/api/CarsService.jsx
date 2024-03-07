@@ -8,7 +8,7 @@ function getAllCars(params) {
     return axios.get(`${apiUrl}/cars`, {params})
         .then(response => {
             const data = response && response.data;
-
+            console.log(data)
             return data && data;
         })
         .catch(() => errorNotif())

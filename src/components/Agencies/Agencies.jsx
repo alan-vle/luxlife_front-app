@@ -140,8 +140,8 @@ const ListOfAgencies = () => {
         }
     }
     return (
-        <div className={"grid grid-cols-12 gap-2 mt-24 mb-48 justify-center"}>
-            <div className={"lg:col-start-4 lg:col-span-6 col-span-12 shadow-lg rounded-lg p-8 flex flex-wrap justify-between gap-8"}>
+        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-12 2xl:grid-cols-12 gap-2 mt-24 mb-48 justify-center"}>
+            <div className={"xl:col-start-4 xl:col-span-6 shadow-lg rounded-lg p-8 flex flex-wrap justify-between gap-8"}>
                 <Card className="w-96 h-fit">
                     <Input
                         label="Rechercher une agence" placeholder={"13400, Aubagne"}

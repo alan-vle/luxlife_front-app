@@ -85,9 +85,9 @@ function RentalForm({
     return (
         <>
             <form>
-                <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-6 gap-4 block flex-col">
                     <div>
-                        <div  style={{ position: 'relative', display: 'inline-block' }}>
+                        <div className={"w-full"} style={{ position: 'relative', display: 'inline-block' }}>
                             <Input size="md" label="Agence de départ" placeholder={"Marseille"}
                                    className={"required"}
                                    onChange={(e) => inputAgencyHandler(e,'from')}
