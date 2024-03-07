@@ -34,7 +34,7 @@ function CarsSearch() {
                 <div className={"shadow-md"}>Au : {rentalFields.toDate}</div>
                 <div className={"shadow-md"}>à : {rentalFields.toTime}</div>
             </div>
-            <div className={"mt-8"}><Cars cars={cars} /></div>
+            <div className={"mt-8"}><Cars cars={cars} choseMode={true}/></div>
         </div>
 
 );

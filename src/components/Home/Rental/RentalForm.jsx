@@ -1,11 +1,12 @@
 import {
-    Button, Input, Select, Option
+    Button, Input, Select, Option, List
 } from "@material-tailwind/react";
 import {useEffect, useRef, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate} from "react-router";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
+import {errorNotif, successNotif} from "@/utils/Notif.js";
 function RentalForm({
     fromAgency: fromAgencyProp = null,
     agencyUuid: agencyUuidProp = null,
@@ -27,6 +28,7 @@ function RentalForm({
     const [toAgency, setToAgency] = useState(toAgencyProp);
     const [toDate, setToDate] = useState(toDateProp);
     const [toTime, setToTime] = useState(toTimeProp);
+    const [mileageKilometers, setMileageKilometers] = useState(null)
     const [returnPlace, setReturnPlace] = useState(returnPlaceProp);
     const [fromSuggestions, setFromSuggestions] = useState(fromSuggestionsProp);
     const [toSuggestions, setToSuggestions] = useState(toSuggestionsProp);
@@ -50,7 +52,7 @@ function RentalForm({
 
     async function inputAgencyHandler(e, type) {
         const inputValue = e.target.value;
-
+        setFromAgency(e.target.value)
         if (inputValue.length >= 2) {
             const foundAgencies = await getAllAgencies({'city': inputValue})
             const notFoundMessage = "Aucune agence trouvée.";
@@ -88,44 +90,32 @@ function RentalForm({
                         <div  style={{ position: 'relative', display: 'inline-block' }}>
                             <Input size="md" label="Agence de départ" placeholder={"Marseille"}
                                    className={"required"}
-                                   onChange={(e) => setFromAgency(e.target.value)}  onInput={(e) => inputAgencyHandler(e,"from")}
-                                    value={`${fromAgency !== null ? fromAgency : ''}`}
+                                   onChange={(e) => inputAgencyHandler(e,'from')}
+                                   value={`${fromAgency !== null ? fromAgency : ''}`}
                             />
-                            {fromSuggestions !== null && (
-                                <div className={"w-fit h-fit"} ref={suggestionsRef} style={{
-                                        position: 'absolute',
-                                        top: '100%', left: 0,
-                                        zIndex: 999,
-                                        backgroundColor: '#fff',
-                                        border: '1px solid #ccc',
-                                        borderRadius: '4px'
-                                    }}
-                                >
-                                    <ul>
-                                        {Array.isArray(fromSuggestions) ?
-                                            fromSuggestions.map((fromSuggestion, index) => (
-                                                <li key={index} className={"border border-b-8"} onClick={() => {
-                                                        setFromAgency(fromSuggestion.city)
-                                                        setAgencyUuid(fromSuggestion.uuid)
-                                                        setFromSuggestions(null)
-                                                    }}
-                                                >
-                                                    {fromSuggestion.address} {fromSuggestion.city}
-                                                </li>
-                                            ))
-                                            : <li>{fromSuggestions}</li>
-                                        }
-                                    </ul>
-                                </div>
-                            )}
+                            {fromSuggestions && Array.isArray(fromSuggestions) && fromSuggestions.length > 0 ? fromSuggestions.map((fromSuggestion, index) => (
+                                <List key={index} className={"border border-b-gray"}>
+                                    <Button type={"button"} variant={"text"} onClick={() => {
+                                        setFromAgency(fromSuggestion.city)
+                                        setAgencyUuid(fromSuggestion.uuid)
+                                        setFromSuggestions(null)
+                                    }}> {fromSuggestion.address} {fromSuggestion.city}</Button>
+                                </List>
+                            )) : fromSuggestions && fromSuggestions.length > 0 ? <List className={"border border-b-gray"}>Aucune agence trouvée.</List> : ''}
                         </div>
-
                     </div>
                     <div>
                         <Select label="Type de location" onChange={(e) => setRentalType(e)}>
                             <Option value={"0"}>Classique</Option>
                             <Option value={"1"}>Longue durée</Option>
                         </Select>
+                    </div>
+                    <div>
+                        <Input size="md" label="Kilomètres" placeholder={"100"}
+                               className={"required"}
+                               onChange={(e) => setMileageKilometers(e.target.value)}
+                               value={`${mileageKilometers !== null ? mileageKilometers : ''}`}
+                        />
                     </div>
                     <div>
                         <Input label="Date de prise en charge" type={"date"} onChange={(e) => setFromDate(e.target.value)}/>
@@ -151,33 +141,31 @@ function RentalForm({
                             }}
                         >+ Lieux de retour différent?</Button>
                     </div>
-                    <div>{returnPlace &&
-                        <div style={{ position: 'relative', display: 'inline-block' }}>
-                            <Input size="md" label="Agence de retour" placeholder={"Aix-en-provence"}
-                               onChange={(e) => {
-                                   setToAgency(e.target.value)
-                               }} onInput={(e) => inputAgencyHandler(e,"to")}
-                                   value={`${toAgency !== null ? toAgency : ''}`}
-                            />
-                            {toSuggestions !== null && (
-                                <div ref={suggestionsRef} style={{ position: 'absolute', top: '100%', left: 0, zIndex: 999, backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}>
-                                    <ul>
-                                        {Array.isArray(toSuggestions) ?
-                                            toSuggestions.map((toSuggestion, index) => (
-                                                <li key={index} onClick={() => {
-                                                    setToAgency(toSuggestion.city)
-                                                    setToSuggestions(null)
-                                                    }}
-                                                >
-                                                    {toSuggestion.address} {toSuggestion.city}
-                                                </li>
-                                            ))
-                                            : <li>{toSuggestions}</li>
-                                        }
-                                    </ul>
+                    <div>
+                        {
+                            returnPlace && (
+                                <div style={{ position: 'relative', display: 'inline-block' }}>
+                                    <Input size="md" label="Agence de retour" placeholder={"Aix-en-provence"}
+                                       onChange={(e) => {
+                                           setToAgency(e.target.value)
+                                       }} onInput={(e) => inputAgencyHandler(e,"to")}
+                                           value={`${toAgency !== null ? toAgency : ''}`}
+                                    />
+                                        {toSuggestions && Array.isArray(toSuggestions) && toSuggestions.length > 0 ? toSuggestions.map((toSuggestion, index) => (
+                                            <List key={index} className={"border border-b-gray"}>
+                                                <Button type={"button"} variant={"text"} onClick={() => {
+                                                    if(toAgency.uuid === fromAgency.uuid) {
+                                                        errorNotif('Votre agence de retour n\'est pas différente de celle de départ.', 'same-agency')
+                                                    } else {
+                                                        setToAgency(toSuggestion.city)
+                                                        setToSuggestions(null)
+                                                    }
+                                                }}> {toSuggestion.address} {toSuggestion.city}</Button>
+                                            </List>
+                                        )) : toSuggestions && toSuggestions.length > 0 ? <List className={"border border-b-gray"}>Aucune agence trouvée.</List> : ''}
+
                                 </div>
                             )}
-                        </div>}
                     </div>
                     <div></div>
                     <div></div>

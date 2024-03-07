@@ -17,6 +17,7 @@ import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
 import DefaultLoader from "@/components/Loader/DefaultLoader.jsx";
 import Agency from "@/components/Agencies/Agency.jsx";
+import {useNavigate} from "react-router";
 
 const Agencies = () => {
     const [agencies, setAgencies] = useState(null)
@@ -114,6 +115,7 @@ const ListOfAgencies = () => {
     const [paramsFilter, setParamsFilter] = useState(null)
     const [agency, setAgency] = useState(null)
     const [agencyInputValue, setAgencyInputValue] = useState(null)
+    const goTo = useNavigate()
 
     useEffect(() => {
         if(paramsFilter !== null) {
@@ -130,6 +132,7 @@ const ListOfAgencies = () => {
     const agencyHandler = (e) => {
         const agencyValue = e.target.value;
         setAgencyInputValue(agencyValue)
+
         if(agencyValue.length >= 2) {
             filterUpdater('city', agencyValue, setParamsFilter)
         } else {
@@ -169,7 +172,18 @@ const ListOfAgencies = () => {
                             </Typography>
                         </CardBody>
                         <CardFooter className="pt-0 flex justify-between">
-                            <Button type={"button"}>Voir les voitures disponibles</Button>
+                            <Button type={"button"}
+                                onClick={() => {
+                                    const rentalFields = {
+                                        fromAgency: agency.city,
+                                        agencyUuid: agency.uuid,
+                                    }
+
+                                    goTo('/cars/search-result', {state: rentalFields})
+                                }}
+                            >
+                                Voir les voitures disponibles
+                            </Button>
                         </CardFooter>
                     </Card>
                 )}
