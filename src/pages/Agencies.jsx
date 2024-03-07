@@ -1,5 +1,7 @@
+import {ListOfAgencies} from "@/components/Agencies/Agencies.jsx";
+
 const Agencies = () => {
-    return <><h1>Agencies pages</h1></>
+    return <ListOfAgencies />
 }
 
 export default Agencies;

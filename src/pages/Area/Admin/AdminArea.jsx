@@ -3,10 +3,9 @@ import {Tab, TabPanel, Tabs, TabsBody, TabsHeader} from "@material-tailwind/reac
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCar, faLandmark} from "@fortawesome/free-solid-svg-icons";
 import {faUsers} from "@fortawesome/free-solid-svg-icons/faUsers";
-import Agencies from "@/components/Agencies/Agencies.jsx";
 import Cars from "@/components/Cars/Cars.jsx";
 import Users from "@/components/Users/Users.jsx";
-import DefaultLoader from "@/components/Loader/DefaultLoader.jsx";
+import {Agencies} from "@/components/Agencies/Agencies.jsx";
 
 const AdminArea = () => {
     return (
