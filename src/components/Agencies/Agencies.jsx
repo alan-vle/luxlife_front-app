@@ -99,7 +99,7 @@ const Agencies = () => {
                 {
                     !agencies ? <DefaultLoader /> :
                         0 === agencies.length ? (
-                            <tr><td className={"text-left p-1 font-semibold"} colSpan={3}>Aucune agence trouvé.</td></tr>
+                            <tr><td className={"text-left p-1 font-semibold h-[5%]"} colSpan={3}>Aucune agence trouvé.</td></tr>
                         ) : (
                             agencies.map((agency, index) => (<Agency {...agency} index={index} tdMode={true} />))
                         )

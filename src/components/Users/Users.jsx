@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getAllUsers} from "@/service/api/Users.jsx";
+import {getAllUsers} from "@/service/api/UsersService.jsx";
 import {Card, Input, Option, Select, Typography} from "@material-tailwind/react";
 import DefaultLoader from "@/components/Loader/DefaultLoader.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
@@ -11,10 +11,10 @@ const Users = ({
     const [users, setUsers] = useState(null)
     const [agency, setAgency] = useState(agencyProp)
     const [paramsFilter, setParamsFilter] = useState(agencyProp ? {'agency': `/agencies/${agencyProp}`} : null)
-
+    const [reload, setReload] = useState(null)
     useEffect(() => {
         fetchUsers().then(result => setUsers(result))
-    }, [paramsFilter])
+    }, [paramsFilter, reload])
 
     async function fetchUsers() {
         return await getAllUsers(paramsFilter);
@@ -116,15 +116,15 @@ const Users = ({
                             >
                                 Agence
                                 <div className={"flex flex-row flex-wrap"}>
-                                    <div>
-                                        <Select className={"bg-white"} label="Agence" onChange={roleHandler}>
-                                            <Option value={"*"}>Tous</Option>
-                                            <Option value={"admin"}>Admin</Option>
-                                            <Option value={"director"}>Directeur</Option>
-                                            <Option value={"agent"}>Agent</Option>
-                                            <Option value={"customer"}>Client</Option>
-                                        </Select>
-                                    </div>
+                                    {/*<div>*/}
+                                    {/*    <Select className={"bg-white"} label="Agence" onChange={roleHandler}>*/}
+                                    {/*        <Option value={"*"}>Tous</Option>*/}
+                                    {/*        <Option value={"admin"}>Admin</Option>*/}
+                                    {/*        <Option value={"director"}>Directeur</Option>*/}
+                                    {/*        <Option value={"agent"}>Agent</Option>*/}
+                                    {/*        <Option value={"customer"}>Client</Option>*/}
+                                    {/*    </Select>*/}
+                                    {/*</div>*/}
                                     <div>
                                         <Input
                                             variant="outlined" label="Ville de l'agence"
@@ -146,7 +146,7 @@ const Users = ({
                     null === users ? <DefaultLoader /> : users.length === 0 ? (
                         <tr><td className={"text-left p-1 font-semibold"} colSpan={3}>Aucun utilisateur trouvé.</td></tr>
                     ) : (
-                        users.map((user, index) => <User key={index} {...user} index={index} displayAgency={agencyProp && false} />)
+                        users.map((user, index) => <User key={index} {...user} index={index} displayAgency={!agencyProp} setReload={setReload}/>)
                     )
                 }
                 </tbody>

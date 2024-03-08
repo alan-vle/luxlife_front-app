@@ -6,7 +6,7 @@ import PersonalInfoForm from "@/components/Form/PersonalInfoForm.jsx";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {token} from "@/utils/auth.js";
-import {getUser} from "@/service/api/Users.jsx";
+import {getUser} from "@/service/api/UsersService.jsx";
 
 const Account = () => {
     const [user, setUser] = useState(null)

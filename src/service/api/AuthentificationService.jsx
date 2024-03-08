@@ -14,7 +14,7 @@ const RegisterService = (registerData, goTo) => {
         .then(() => {
             successNotif('Inscription réussie ! Vérifiez votre email pour vous connecter.')
 
-            goTo('/login')
+            // goTo('/login')
         })
         .catch(error => {
             const response = error.response

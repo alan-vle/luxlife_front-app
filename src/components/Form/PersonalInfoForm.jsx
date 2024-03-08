@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useNavigate} from "react-router";
 import {
     addressValidator, birthDateValidator, confirmPasswordValidator,
@@ -10,7 +10,8 @@ import {RegisterService} from "@/service/api/AuthentificationService.jsx";
 import {errorNotif} from "@/utils/Notif.js";
 import {Button, Card, CardBody, Input, Typography} from "@material-tailwind/react";
 import {OneFieldPassword, PasswordTooltips} from "@/utils/Forms/Password.jsx";
-import {patchUser} from "@/service/api/Users.jsx";
+import {patchUser} from "@/service/api/UsersService.jsx";
+import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 
 function IconOutlined() {
     return (
@@ -31,29 +32,36 @@ function IconOutlined() {
     );
 }
 
-const PersonalInfoForm = ({
+const   PersonalInfoForm = ({
     fullName: fullNameProp = null,
     email: emailProp = null,
     address: addressProp = null,
     birthDate: birthDateProp = null,
     phoneNumber: phoneNumberProp = null,
-    createMode = false
+    agency: agencyProp = null,
+    uuid = null,
+    createMode = false,
+    adminMode = false,
+    width = null,
+    height = null,
+    setUpdateStatusCallback,
+    setReload
 }) => {
     const [fullName, setFullName] = useState(fullNameProp);
-    const [fullNameIsValid, setFullNameIsValid] = useState(false);
+    const [fullNameIsValid, setFullNameIsValid] = useState(!createMode);
     const [fullNameIsNotValid, setFullNameIsNotValid] = useState(false);
     const [email, setEmail] = useState(emailProp);
-    const [emailIsValid, setEmailIsValid] = useState(false);
+    const [emailIsValid, setEmailIsValid] = useState(!createMode);
     const [emailIsNotValid, setEmailIsNotValid] = useState(false);
     const [address, setAddress] = useState(addressProp);
-    const [addressIsValid, setAddressIsValid] = useState(false);
+    const [addressIsValid, setAddressIsValid] = useState(!createMode);
     const [addressIsNotValid, setAddressIsNotValid] = useState(false);
     const [birthDate, setBirthDate] = useState(birthDateProp);
     const [requiredAge, setRequiredAge] = useState(null)
-    const [birthDateIsValid, setBirthDateIsValid] = useState(false);
+    const [birthDateIsValid, setBirthDateIsValid] = useState(!createMode);
     const [birthDateIsNotValid, setBirthDateIsNotValid] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState(phoneNumberProp);
-    const [phoneNumberIsValid, setPhoneNumberIsValid] = useState(false);
+    const [phoneNumberIsValid, setPhoneNumberIsValid] = useState(!createMode);
     const [phoneNumberIsNotValid, setPhoneNumberIsNotValid] = useState(false);
     const [password, setPassword] = useState(null);
     const [passwordIsValid, setPasswordIsValid] = useState(false)
@@ -67,7 +75,18 @@ const PersonalInfoForm = ({
     const [passwordLowUp, setPasswordLowUp] = useState(false);
     const [passwordNumber, setPasswordNumber] = useState(false);
     const [passwordSymbol, setPasswordSymbol] = useState(false);
+    const [allAgencies, setAllAgencies] = useState(null)
     const goTo = useNavigate()
+
+    useEffect(() => {
+        if(null !== agencyProp) {
+            fetchAllAgencies().then(result => setAllAgencies(result))
+        }
+    }, [])
+
+    async function fetchAllAgencies() {
+        return await getAllAgencies();
+    }
 
     const fullNameHandler = (e) => {
         fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid)
@@ -109,22 +128,35 @@ const PersonalInfoForm = ({
 
     const birthDateHandler = (e) => {
         birthDateValidator(e, setBirthDate, setBirthDateIsValid, setBirthDateIsNotValid, setRequiredAge)
+
+        setBirthDate(e.target.value)
     }
 
     const submitHandler = () => {
-        if(fullNameIsValid && emailIsValid && addressIsValid && phoneNumberIsValid && passwordIsValid && confirmPasswordIsValid && birthDateIsValid) {
+        if(fullNameIsValid && emailIsValid && addressIsValid && phoneNumberIsValid && birthDateIsValid) {
             const userData = {
-                fullName: fullName,
-                email: email,
-                address: address,
-                birthDate: new Date(convertStringToDateIso(birthDate)),
-                plainPassword: password,
-                phoneNumber: phoneNumber
+                fullName: !fullName && fullNameProp ? fullNameProp : fullName,
+                email: !email && emailProp ? emailProp : email,
+                address: !address && addressProp ? addressProp : address,
+                birthDate: !birthDate && birthDateProp || (birthDate === birthDateProp) ? birthDateProp : new Date(convertStringToDateIso(birthDate)),
+                phoneNumber:  !phoneNumber && phoneNumberProp ? phoneNumberProp : phoneNumber.replace(/0/, '')
             }
+
             if(createMode) {
-                RegisterService(userData, goTo)
+                if(false === adminMode && passwordIsValid && confirmPasswordIsValid) {
+                    userData['plainPassword'] = password
+
+                    RegisterService(userData, goTo)
+                } else {
+                    errorNotif('Mots de passes non valides.')
+                }
             } else {
-                patchUser(userData)
+                if(false === adminMode && passwordIsValid && confirmPasswordIsValid && oldPassword.length > 0) {
+                    userData['plainPassword'] = password
+                    userData['oldPassword'] = oldPassword
+                }
+
+                patchUser(uuid, userData, setUpdateStatusCallback, setReload)
             }
         } else {
             errorNotif('Remplissez le formulaire correctement.')
@@ -132,12 +164,15 @@ const PersonalInfoForm = ({
     }
 
     return (
-        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-12 2xl:grid-cols-12 mt-28 mb-28 "}>
-            <div className={"md:col-span-3 lg:col-span-3"}></div>
-            <div className={"col-span-12 md:col-span-6 lg:col-span-6 flex justify-center w-full h-auto"}>
+        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-12 2xl:grid-cols-12 mt-28 mb-28"}>
+            <div className={"col-span-12 flex justify-center w-full h-auto"}>
                 <Card>
                     <CardBody>
-                        <Typography className={"text-black font-extrabold text-2xl"}>{createMode ? 'Rejoignez nous en devenant client !' : 'Modifier vos informations'}</Typography>
+                        {!adminMode && (
+                            <Typography className={"text-black font-extrabold text-2xl"}>
+                                {createMode ? 'Rejoignez nous en devenant client !' : 'Modifier vos informations'}
+                            </Typography>
+                        )}
                         <div className={"grid md:grid-cols-2 lg:grid-cols-2 flex flex-col gap-2 mt-8 placeholder:text-slate-400 w-full"}>
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
@@ -156,20 +191,12 @@ const PersonalInfoForm = ({
                                 />
                             </div>
                             <div className={"mb-4"}>
-                                <Input label={"Adresse"} placeholder={"Ex : 12 rue des champignons, 13002 Marseille"}
-                                       onChange={addressHandler}
-                                       success={addressIsValid}
-                                       error={addressIsNotValid}
-                                       value={addressProp && null === address ? addressProp : address}
-                                />
-                            </div>
-                            <div className={"mb-4"}>
                                 <Input label={"Téléphone"} placeholder={"Ex : 0787652345"}
                                        onChange={phoneNumberHandler}
                                        success={phoneNumberIsValid}
                                        error={phoneNumberIsNotValid}
                                        maxLength={10}
-                                       value={phoneNumberProp && null === phoneNumber ? `0${phoneNumberProp}` : phoneNumber}
+                                       value={phoneNumberProp && null === phoneNumber ? `0${phoneNumberProp}` : null === phoneNumber || phoneNumber.startsWith("0") ? phoneNumber  : `0${phoneNumber}`}
                                 />
                             </div>
                             <div className={"mb-4"}>
@@ -178,39 +205,52 @@ const PersonalInfoForm = ({
                                        onChange={birthDateHandler}
                                        success={birthDateIsValid}
                                        error={birthDateIsNotValid}
+                                       value={birthDateProp && null === birthDate ? birthDateProp.split('T')[0] : birthDate}
                                 />
                             </div>
-                            <div className={"mb-4 w-full"}>
-                                <OneFieldPassword
-                                    onChange={passwordHandler}
-                                    onFocus={() => setVisiblePasswordTooltips(true)}
-                                    onBlur={() => setVisiblePasswordTooltips(false)}
-                                    success={passwordIsValid}
-                                    error={passwordIsNotValid}
-                                />
-                            </div>
-                            <div className={"mb-4 w-full"}>
-                                <OneFieldPassword label={`Confirmez votre ${!createMode ? 'nouveau ' : ''}mot de passe`}
-                                  onChange={confirmPasswordHandler}
-                                  success={confirmPasswordIsValid}
-                                  error={confirmPasswordIsNotValid}
-                                />
-                            </div>
-                            {false === createMode && passwordIsValid && (
-                                <div className={"mb-4 w-full"}>
-                                    <OneFieldPassword label={"Mot de passe actuel"}
-                                      onChange={(e) => setOldPassword(e.target.value)}
-                                    />
-                                </div>
+                            {!adminMode && (
+                                <>
+                                    <div className={"mb-4 w-full"}>
+                                        <OneFieldPassword
+                                            onChange={passwordHandler}
+                                            onFocus={() => setVisiblePasswordTooltips(true)}
+                                            onBlur={() => setVisiblePasswordTooltips(false)}
+                                            success={passwordIsValid}
+                                            error={passwordIsNotValid}
+                                        />
+                                    </div>
+                                    <div className={"mb-4 w-full"}>
+                                        <OneFieldPassword label={`Confirmez votre mot de passe`}
+                                            onChange={confirmPasswordHandler}
+                                            success={confirmPasswordIsValid}
+                                            error={confirmPasswordIsNotValid}
+                                        />
+                                    </div>
+                                    {false === createMode && passwordIsValid && (
+                                        <div className={"mb-4 w-full"}>
+                                            <OneFieldPassword label={"Mot de passe actuel"}
+                                              onChange={(e) => setOldPassword(e.target.value)}
+                                            />
+                                        </div>
+                                    )}
+                                    {visiblePasswordTooltips &&
+                                        <PasswordTooltips
+                                            passwordLength={passwordLength}
+                                            passwordLowUp={passwordLowUp}
+                                            passwordNumber={passwordNumber}
+                                            passwordSymbol={passwordSymbol}
+                                        />
+                                    }
+                                </>
                             )}
-                            {visiblePasswordTooltips &&
-                                <PasswordTooltips
-                                    passwordLength={passwordLength}
-                                    passwordLowUp={passwordLowUp}
-                                    passwordNumber={passwordNumber}
-                                    passwordSymbol={passwordSymbol}
-                                />
-                            }
+                        </div>
+                        <div className={"mb-4"}>
+                            <Input label={"Adresse"} placeholder={"Ex : 12 rue des champignons, 13002 Marseille"}
+                                   onChange={addressHandler}
+                                   success={addressIsValid}
+                                   error={addressIsNotValid}
+                                   value={addressProp && null === address ? addressProp : address}
+                            />
                         </div>
                         <div className={"col-span-2 flex place-content-center mt-2"}>
                             <Button type={"button"} onClick={submitHandler}>{createMode ? 'S\'inscrire' : 'Modifier'}</Button>
@@ -225,7 +265,8 @@ const PersonalInfoForm = ({
 
 function convertStringToDateIso(birthDate) {
     const parts = birthDate.split('/');
-    return parts[2] + '-' + parts[1] + '-' + parts[0];
+
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
 
 export default PersonalInfoForm;

@@ -15,12 +15,12 @@ const ConfirmEmailService = (uuid, expires, signature, goTo) => {
     axios.get(`${apiUrl}/confirm-email/${uuid}`, {params})
         .then(result => {
             if(result.status === 200) {
-                successNotif('Votre adresse email à été vérifiée.')
+                successNotif('Votre adresse email à été vérifiée.', 'verified-email')
 
                 goTo('/login')
             }
         })
-        .catch(error => {
+        .catch(() => {
             errorNotif('Le lien est invalide.')
 
             goTo('/not-found')
