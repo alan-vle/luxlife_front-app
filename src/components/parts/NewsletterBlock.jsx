@@ -3,7 +3,7 @@ import mailboxImage from "@/assets/mailbox.png";
 
 const NewsletterBlock = () => {
     return (
-        <Card className="bg-[#cdeae1] rounded-md flex-row">
+        <Card className="bg-[#cdeae1] rounded-md flex-row mt-[100p hidden sm:hidden md:hidden lg:hidden xl:block 2xl:block">
             <CardBody>
                 <div className={"grid grid-cols-3 h-8"}>
                     <div className={"col-span-2"}>

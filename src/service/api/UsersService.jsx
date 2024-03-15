@@ -26,22 +26,16 @@ function getUser(userUuid) {
     ;
 }
 
-function patchUser(userUuid, userData, setUpdateStatusCallback, setReload) {
-    axios.patch(`${apiUrl}/users/${userUuid}`, userData, {headers: authorization})
+function patchUser(userUuid, userData, setUpdateStatusCallback, setReload, updateUser) {
+    return axios.patch(`${apiUrl}/users/${userUuid}`, userData, {headers: authorization})
         .then((response) => {
-            console.log(CurrentUserUuid())
-            console.log(response.data.uuid)
             if(CurrentUserUuid() === response.data.uuid) {
                 successNotif('Vos informations ont bien été modifiées.', 'modified-user')
+                return response.data.fullName
             } else {
-                if(null === setUpdateStatusCallback) {
-                    successNotif('Utilisateur modifié.', 'modified-user')
-                } else {
-                    setUpdateStatusCallback('Utilisateur modifié.')
-                    setReload(true)
-                }
+                successNotif('Utilisateur modifié.', 'modified-user')
+                setReload(true)
             }
-
         })
         .catch(error => {
             const response = error.response

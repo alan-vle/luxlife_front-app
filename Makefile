@@ -47,6 +47,9 @@ start: up dev
 
 launch: build install dev
 
+prod:
+	@make install
+	npm run build
 stop:
 	@$(DOCKER_COMPOSE) down --remove-orphans
 

@@ -21,9 +21,9 @@ const Account = () => {
     }
 
     return (
-        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-12 2xl:grid-cols-12 mt-24"}>
-            <div className={"col-start-3 col-span-8 flex justify-center h-full w-full"}>
-                <Tabs value="personal-informations" orientation="vertical" className={"shadow-lg rounded-lg w-full"}>
+        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-12 2xl:grid-cols-12 mt-8"}>
+            <div className={"col-start-3 col-span-8 flex justify-center h-full"}>
+                <Tabs value="personal-informations" orientation="vertical" className={"shadow-lg rounded-lg"}>
                     <TabsHeader className="">
                         <Tab value={"personal-informations"} className="place-items-start">
                             <div className="flex items-center gap-2">
@@ -39,7 +39,7 @@ const Account = () => {
                         </Tab>
                     </TabsHeader>
                     <TabsBody>
-                        <TabPanel value={"personal-informations"} className="py-0">
+                        <TabPanel value={"personal-informations"} className="p-8">
                             <PersonalInfoForm {...user} />
                         </TabPanel>
                         <TabPanel value={"payment-informations"} className="py-0">

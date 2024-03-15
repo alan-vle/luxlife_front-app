@@ -4,6 +4,9 @@ import {faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 import UserModal from "@/components/modal/UserModal.jsx";
 import React, {useState} from "react";
 import PersonalInfoForm from "@/components/Form/PersonalInfoForm.jsx";
+import {IsAdmin, IsDirector} from "@/utils/CurrentUser.js";
+import {token} from "@/utils/auth.js";
+import {jwtDecode} from "jwt-decode";
 
 const User = ({
     fullName,
@@ -12,6 +15,8 @@ const User = ({
     birthDate,
     address,
     agency,
+    customerId = null,
+    roles,
     uuid,
     displayAgency = true,
     index,
@@ -21,7 +26,7 @@ const User = ({
     const [open, setOpen] = useState(false);
     const [updateStatusCallback, setUpdateStatusCallback] = useState(null)
 
-    const handleOpen = () => setOpen(!open);
+    const handleOpen = () => setOpen(IsDirector() || IsAdmin() ? !open : false);
     const user = {
         fullName: fullName,
         email: email,
@@ -63,6 +68,18 @@ const User = ({
                     {fullName}
                 </Typography>
             </td>
+
+                <td className={classes}>
+                    <Typography
+                        as={"button"}
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal hover:text-[#70a5ea]"
+                        onClick={handleOpen}
+                    >
+                        {customerId ? customerId : getRoleName(roles)}
+                    </Typography>
+                </td>
             <td className={classes}>
                 <Typography
                     as={"button"}
@@ -112,5 +129,9 @@ const User = ({
 
 const AddUser = () => {
 
+}
+
+const getRoleName = (roles) => {
+    return IsAdmin(roles) ? 'Admin' : IsDirector(roles) ? 'Directeur' : 'Agent';
 }
 export {User, AddUser};

@@ -3,7 +3,7 @@ import PrivateRoutes from './PrivateRoutes.jsx';
 import NotFound from "../NotFound.jsx";
 import Login from "../Auth/Login.jsx";
 import Home from "../Home/Home.jsx";
-import BasketProvider from "../../components/store/BasketContext.jsx";
+import BasketProvider from "../../store/BasketContext.jsx";
 import Header from "../../components/parts/Header.jsx";
 import Register from "../Auth/Register.jsx";
 import Account from "../Account/Account.jsx";
@@ -19,12 +19,13 @@ import ProtectedRoute from "@/pages/routes/ProtectedRoute.jsx";
 import DirectorArea from "@/pages/Area/Director/DirectorArea.jsx";
 import AgentArea from "@/pages/Area/Agent/AgentArea.jsx";
 import CustomerArea from "@/pages/Area/Customer/CustomerArea.jsx";
+import {UserProvider} from "@/store/UserContext.jsx";
 
 const Router = () => {
     return (
         <>
             <BrowserRouter>
-                <BasketProvider>
+                <UserProvider>
                     <Header />
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -54,7 +55,7 @@ const Router = () => {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Footer />
-                </BasketProvider>
+                </UserProvider>
             </BrowserRouter>
         </>
     );

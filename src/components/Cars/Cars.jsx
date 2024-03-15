@@ -7,7 +7,6 @@ import {getAllCars, getAllManufacturers} from "@/service/api/CarsService.jsx";
 import {Option, Select} from "@material-tailwind/react";
 import login from "@/pages/Auth/Login.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
-import AsyncSelect from "@/BugFixer/AsyncSelect.jsx";
 
 function Cars({
     cars: carsProp = null,
@@ -50,8 +49,8 @@ function Cars({
         setSelectedManufacturer(value)
     }
     return (
-        <div className={"mb-8"}>
-            <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-6 pl-8 mb-8 flex flex-col gap-2"}>
+        <div className={"mb-[800px]"}>
+            <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3 2xl:grid-cols-6 pl-8 mb-8 flex flex-col gap-2"}>
                 <div>
                     {allManufacturers && (
                         <Select variant="outlined" label="Fabriquant" onChange={manufacturerHandler} value={selectedManufacturer}>
@@ -79,7 +78,7 @@ function Cars({
                     }
                 </div>
             </div>
-            <div className={"grid grid-cols-1 flex flex-col md:grid-cols-4 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8 min-h-28"}>
+            <div className={"grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8 min-h-28"}>
                 {
                     null === cars && null !== agencyProp ? <ImageAndTextLoader />
                         : null === cars || cars.length === 0 ? (

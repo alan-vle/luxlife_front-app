@@ -12,6 +12,10 @@ import {Button, Card, CardBody, Input, Typography} from "@material-tailwind/reac
 import {OneFieldPassword, PasswordTooltips} from "@/utils/Forms/Password.jsx";
 import {patchUser} from "@/service/api/UsersService.jsx";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
+import {useUser} from "@/store/UserContext.jsx";
+import {CurrentUserUuid} from "@/utils/CurrentUser.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
 
 function IconOutlined() {
     return (
@@ -77,6 +81,7 @@ const   PersonalInfoForm = ({
     const [passwordSymbol, setPasswordSymbol] = useState(false);
     const [allAgencies, setAllAgencies] = useState(null)
     const goTo = useNavigate()
+    const { updateUser } = useUser();
 
     useEffect(() => {
         if(null !== agencyProp) {
@@ -89,9 +94,11 @@ const   PersonalInfoForm = ({
     }
 
     const fullNameHandler = (e) => {
-        fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid)
+        const fullNameValue = e.target.value
 
-        setFullName(e.target.value)
+        fullNameValidator(fullNameValue, setFullName, setFullNameIsValid, setFullNameIsNotValid)
+
+        setFullName(fullNameValue)
     };
 
     const emailHandler = (e) => {
@@ -139,7 +146,7 @@ const   PersonalInfoForm = ({
                 email: !email && emailProp ? emailProp : email,
                 address: !address && addressProp ? addressProp : address,
                 birthDate: !birthDate && birthDateProp || (birthDate === birthDateProp) ? birthDateProp : new Date(convertStringToDateIso(birthDate)),
-                phoneNumber:  !phoneNumber && phoneNumberProp ? phoneNumberProp : phoneNumber.replace(/0/, '')
+                phoneNumber:  !phoneNumber && phoneNumberProp ? phoneNumberProp : phoneNumberNormalizer(phoneNumber)
             }
 
             if(createMode) {
@@ -156,15 +163,22 @@ const   PersonalInfoForm = ({
                     userData['oldPassword'] = oldPassword
                 }
 
-                patchUser(uuid, userData, setUpdateStatusCallback, setReload)
+                const patchedUser = patchUser(uuid, userData, setUpdateStatusCallback, setReload)
+
+                patchedUser.then(result => {
+                    if(uuid === CurrentUserUuid()){
+                        updateUser(result)
+                    }
+                })
             }
+
         } else {
             errorNotif('Remplissez le formulaire correctement.')
         }
     }
 
     return (
-        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-12 2xl:grid-cols-12 mt-28 mb-28"}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-12 2xl:grid-cols-12 ${createMode && 'mt-28'} mb-28`}>
             <div className={"col-span-12 flex justify-center w-full h-auto"}>
                 <Card>
                     <CardBody>
@@ -173,6 +187,12 @@ const   PersonalInfoForm = ({
                                 {createMode ? 'Rejoignez nous en devenant client !' : 'Modifier vos informations'}
                             </Typography>
                         )}
+                        {false === requiredAge && (
+                            <Typography variant={"p"} color={"white"} className={"bg-red-500 mb-4 font-bold p-4 rounded"}>
+                                <FontAwesomeIcon icon={faCircleExclamation} className={"mr-4"} style={{color: "#ffffff",}} size={"xl"} />
+                                Vous devez avoir 18 ans !
+                            </Typography>)
+                        }
                         <div className={"grid md:grid-cols-2 lg:grid-cols-2 flex flex-col gap-2 mt-8 placeholder:text-slate-400 w-full"}>
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
@@ -200,7 +220,6 @@ const   PersonalInfoForm = ({
                                 />
                             </div>
                             <div className={"mb-4"}>
-                                {false === requiredAge && (<Typography variant={"h3"} color={"red"}>Vous devez avoir 18 ans !</Typography>)}
                                 <Input label={"Votre date de naissance"} type={"date"} placeholder={"Ex : 28/01/1995"}
                                        onChange={birthDateHandler}
                                        success={birthDateIsValid}
@@ -269,4 +288,7 @@ function convertStringToDateIso(birthDate) {
     return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
 
+function phoneNumberNormalizer(phoneNumber) {
+    return phoneNumber.replace(/^0(?!\\d)/, '')
+}
 export default PersonalInfoForm;

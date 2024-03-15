@@ -12,10 +12,13 @@ import userGreyBg from "@/assets/user-bg-grey.png";
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import {useNavigate} from "react-router";
+import {useUser} from "@/store/UserContext.jsx";
 
 function ProfileMenu() {
     const [openMenu, setOpenMenu] = useState(false)
     const goTo = useNavigate()
+    const { userName } = useUser();
+
     return (
         <Menu open={openMenu} handler={setOpenMenu} allowHover>
             <MenuHandler>
@@ -23,12 +26,13 @@ function ProfileMenu() {
                     <div>
                         <Avatar
                             variant="circular"
-                            alt={CurrentUserName()}
+                            alt={`avatar of ${userName}`}
                             src={userGreyBg}
+                            size={"sm"}
                         />
                     </div>
                    <div className={"flex items-center ml-4"}>
-                       <Typography className={"font-bold"}>{CurrentUserName()}</Typography>
+                       <Typography className={"font-bold"}>{userName}</Typography>
                    </div>
 
                 </div>

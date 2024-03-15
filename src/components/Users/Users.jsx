@@ -14,6 +14,7 @@ const Users = ({
     const [reload, setReload] = useState(null)
     useEffect(() => {
         fetchUsers().then(result => setUsers(result))
+        setReload(false)
     }, [paramsFilter, reload])
 
     async function fetchUsers() {
@@ -28,6 +29,16 @@ const Users = ({
             filterUpdater('fullName', nameValue, setParamsFilter)
         } else {
             filterRemover('fullName', paramsFilter, setParamsFilter)
+        }
+    }
+
+    const customerIdHandler = (e) => {
+        const customerIdValue = e.target.value
+
+        if(customerIdValue.length >= 6) {
+            filterUpdater('customerId', customerIdValue, setParamsFilter)
+        } else {
+            filterRemover('customerId', paramsFilter, setParamsFilter)
         }
     }
 
@@ -77,6 +88,23 @@ const Users = ({
                                     placeholder="Jon Johny"
                                     className={"bg-white"}
                                     onChange={nameHandler}
+                                />
+                            </div>
+                        </Typography>
+                    </th>
+                    <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                        <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal leading-none opacity-70"
+                        >
+                            N° Client
+                            <div className={"flex justify-center w-80"}>
+                                <Input
+                                    variant="outlined" label="N° Client"
+                                    placeholder="6584554"
+                                    className={"bg-white w-96"}
+                                    onChange={customerIdHandler}
                                 />
                             </div>
                         </Typography>
