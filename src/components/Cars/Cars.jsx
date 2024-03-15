@@ -1,12 +1,10 @@
-import Car from "@/components/Cars/Car.jsx";
 import ImageAndTextLoader from "@/components/Loader/ImageAndTextLoader.jsx";
-import Pagination from "@/utils/Pagination.jsx";
 import {useEffect, useState} from "react";
-import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {getAllCars, getAllManufacturers} from "@/service/api/CarsService.jsx";
 import {Option, Select} from "@material-tailwind/react";
-import login from "@/pages/Auth/Login.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
+import {IsAdmin, IsDirector} from "@/utils/CurrentUser.js";
+import {AddCar, Car} from "@/components/Cars/Car.jsx";
 
 function Cars({
     cars: carsProp = null,
@@ -18,6 +16,7 @@ function Cars({
     const [paramsFilter, setParamsFilter] = useState(agencyProp ? {agency: `/agencies/${agencyProp}` } : null)
     const [allManufacturers, setAllManufacturers] = useState(null)
     const [selectedManufacturer, setSelectedManufacturer] = useState("*")
+    const [reload, setReload] = useState(null)
 
     useEffect(() => {
         if(null === allManufacturers) {
@@ -25,7 +24,7 @@ function Cars({
         }
 
         fetchCars().then(result => setCars(result))
-    }, [paramsFilter])
+    }, [paramsFilter, reload])
 
     async function fetchCars() {
         return await getAllCars(paramsFilter);
@@ -48,8 +47,12 @@ function Cars({
 
         setSelectedManufacturer(value)
     }
+
     return (
         <div className={"mb-[800px]"}>
+            <div className={"flex justify-start w-96"}>
+               <AddCar setReload={setReload} />
+            </div>
             <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3 2xl:grid-cols-6 pl-8 mb-8 flex flex-col gap-2"}>
                 <div>
                     {allManufacturers && (

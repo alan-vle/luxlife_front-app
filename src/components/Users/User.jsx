@@ -1,6 +1,6 @@
 import {Button, Dialog, DialogBody, DialogFooter, DialogHeader, Typography} from "@material-tailwind/react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import {faPenToSquare, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import UserModal from "@/components/modal/UserModal.jsx";
 import React, {useState} from "react";
 import PersonalInfoForm from "@/components/Form/PersonalInfoForm.jsx";
@@ -127,8 +127,36 @@ const User = ({
     )
 }
 
-const AddUser = () => {
+const AddUser = ({
+    openV: openProp = false,
+    setReload
+}) => {
+    const [open, setOpen] = useState(openProp);
+    const handleOpen = () => setOpen(IsDirector() || IsAdmin() ? !open : false);
 
+    return (
+        <>
+            <Button type={"button"} variant={"gradient"} onClick={() => setOpen(!open)}>
+                <FontAwesomeIcon icon={faUserPlus} size={"lg"} />
+            </Button>
+            <Dialog open={open} size={"md"} handler={handleOpen}>
+                <DialogHeader>aa</DialogHeader>
+                <DialogBody>
+                    <PersonalInfoForm createMode={true} adminMode={true} setReload={setReload}/>
+                </DialogBody>
+                <DialogFooter>
+                    <Button
+                        variant="text"
+                        color="red"
+                        onClick={handleOpen}
+                        className="mr-1"
+                    >
+                        <span>Revenir</span>
+                    </Button>
+                </DialogFooter>
+            </Dialog>
+        </>
+    )
 }
 
 const getRoleName = (roles) => {
