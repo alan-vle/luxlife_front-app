@@ -99,7 +99,7 @@ const Agencies = () => {
                 {
                     !agencies ? <DefaultLoader /> :
                         0 === agencies.length ? (
-                            <tr><td className={"text-left p-1 font-semibold"} colSpan={3}>Aucune agence trouvé.</td></tr>
+                            <tr><td className={"text-left p-1 font-semibold h-[5%]"} colSpan={3}>Aucune agence trouvé.</td></tr>
                         ) : (
                             agencies.map((agency, index) => (<Agency {...agency} index={index} tdMode={true} />))
                         )
@@ -158,35 +158,7 @@ const ListOfAgencies = () => {
                         </List>
                     ))}
                 </Card>
-                {agency && (
-                    <Card className="w-96 mt-8">
-                        <CardHeader color="blue-gray" className="relative h-56" children={""}></CardHeader>
-                        <CardBody>
-                            <Typography variant="h5" color="blue-gray" className="mb-2">
-                                <FontAwesomeIcon icon={faLocationDot} /> {agency.address} {agency.city}
-                            </Typography>
-                            <Typography>
-                                <FontAwesomeIcon icon={faClock} /> {agency.isOpen ? 'Ouverte' : 'Fermée'} <br />
-                                Horaires : <br />
-                                {agency.openingHours} - {agency.closingHours}
-                            </Typography>
-                        </CardBody>
-                        <CardFooter className="pt-0 flex justify-between">
-                            <Button type={"button"}
-                                onClick={() => {
-                                    const rentalFields = {
-                                        fromAgency: agency.city,
-                                        agencyUuid: agency.uuid,
-                                    }
-
-                                    goTo('/cars/search-result', {state: rentalFields})
-                                }}
-                            >
-                                Voir les voitures disponibles
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                )}
+                {agency && (<Agency {...agency} />)}
             </div>
         </div>
     )

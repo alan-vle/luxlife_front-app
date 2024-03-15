@@ -19,7 +19,10 @@ const Login = () => {
         emailValidator(e, setEmail, setEmailIsValid, setEmailIsNotValid)
     }
 
-    const submitHandler = () => {
+    const submitHandler = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
         if(emailIsValid && null !== password) {
             const loginData = {
                 email: email,
@@ -35,41 +38,46 @@ const Login = () => {
             toast.error('Votre mot de passe n\'est pas valide.', {
                 position: "top-center"
             })
+        } else {
+            toast.error('Le formulaire n\'est pas valide.')
         }
     }
-    return(
+
+    return (
         <div className={"grid grid-cols-12 mt-28 mb-28"}>
             <div className={"md:col-span-4 lg:col-span-4"}></div>
             <div className={"col-span-12 md:col-span-4 lg:col-span-4 w-fit"}>
-                <Card>
-                    <CardBody>
-                        <div className={"grid grid-cols-2 flex justify-center p-2 w-96"}>
-                            <div className={"col-span-2 mt-4"}>
-                                <Typography as="h2" className={"text-black font-extrabold text-[40px]"}>
-                                    Accédez à votre espace
-                                </Typography>
+                <form onSubmit={submitHandler}>
+                    <Card>
+                        <CardBody>
+                            <div className={"grid grid-cols-2 flex justify-center p-2 w-96"}>
+                                <div className={"col-span-2 mt-4"}>
+                                    <Typography as="h2" className={"text-black font-extrabold text-[40px]"}>
+                                        Accédez à votre espace
+                                    </Typography>
+                                </div>
+                                <div className={"col-span-2 mt-4"}>
+                                    <Input label={"Email"} placeholder={"jon-jony@gmail.com"}
+                                           onChange={emailHandler} success={emailIsValid} error={emailIsNotValid}
+                                    />
+                                </div>
+                                <div className={"col-span-2 mt-4"}>
+                                    <OneFieldPassword onChange={(e) => setPassword(e.target.value)}/>
+                                </div>
+                                <div className={"col-span-2 mt-4 flex justify-center"}>
+                                    <Button type={"submit"}>Connexion</Button>
+                                </div>
+                                <div className={"col-span-2 mt-4 flex justify-end"}>
+                                    <Button variant={"text"} onClick={() => goTo('/forgot-password')}>Mot de passe oublié?</Button>
+                                </div>
                             </div>
-                            <div className={"col-span-2 mt-4"}>
-                                <Input label={"Email"} placeholder={"jon-jony@gmail.com"}
-                                       onChange={emailHandler} success={emailIsValid} error={emailIsNotValid}
-                                />
-                            </div>
-                            <div className={"col-span-2 mt-4"}>
-                                <OneFieldPassword onChange={(e) => setPassword(e.target.value)}/>
-                            </div>
-                            <div className={"col-span-2 mt-4 flex justify-center"}>
-                                <Button onClick={submitHandler}>Connexion</Button>
-                            </div>
-                            <div className={"col-span-2 mt-4 flex justify-end"}>
-                                <Button variant={"text"} onClick={() => goTo('/forgot-password')}>Mot de passe oublié?</Button>
-                            </div>
-                        </div>
-                    </CardBody>
-                </Card>
+                        </CardBody>
+                    </Card>
+                </form>
+
             </div>
             <div className={"col-span-5"}></div>
         </div>
-
     )
 }
 

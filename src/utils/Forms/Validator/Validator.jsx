@@ -1,5 +1,4 @@
-function fullNameValidator(e, setFullName, setFullNameIsValid, setFullNameIsNotValid) {
-    const fullNameValue = e.target.value
+function fullNameValidator(fullNameValue, setFullName, setFullNameIsValid, setFullNameIsNotValid) {
     const frFullNameRegex = /^[a-zA-ZÀ-ÿ\-\' ]+$/;
 
     if(fullNameValue.length >= 2 && frFullNameRegex.test(fullNameValue)) {

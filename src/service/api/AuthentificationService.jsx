@@ -3,14 +3,13 @@ import {toast} from "react-toastify";
 import {errorNotif, successNotif} from "@/utils/Notif.js";
 import {IsAdmin, IsAgent, IsDirector} from "@/utils/CurrentUser.js";
 import {jwtDecode} from "jwt-decode";
+import {jsonContentType} from "@/utils/ApiHeaders.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
-const headers = {
-    'Content-Type': 'application/json',
-};
+
 const RegisterService = (registerData, goTo) => {
 
-    axios.post(`${apiUrl}/register`, registerData, {headers})
+    axios.post(`${apiUrl}/register`, registerData, {headers: jsonContentType})
         .then(() => {
             successNotif('Inscription réussie ! Vérifiez votre email pour vous connecter.')
 
@@ -43,7 +42,7 @@ const LoginService = (loginData, goTo) => {
         })
     }
 
-    axios.post(`${apiUrl}/login`, loginData, {headers})
+    axios.post(`${apiUrl}/login`, loginData, {headers: jsonContentType})
         .then(response => {
             const token = response && response.data.token
 
@@ -52,6 +51,7 @@ const LoginService = (loginData, goTo) => {
                 let pageToGo = '';
 
                 const decodedToken = jwtDecode(token).roles
+
                 if(IsAdmin(decodedToken)) {
                     pageToGo = '/admin'
                 } else if(IsDirector(decodedToken)) {

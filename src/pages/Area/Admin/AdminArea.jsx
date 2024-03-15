@@ -6,6 +6,7 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons/faUsers";
 import Cars from "@/components/Cars/Cars.jsx";
 import Users from "@/components/Users/Users.jsx";
 import {Agencies} from "@/components/Agencies/Agencies.jsx";
+import UserModal from "@/components/modal/UserModal.jsx";
 
 const AdminArea = () => {
     return (

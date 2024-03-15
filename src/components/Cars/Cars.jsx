@@ -7,7 +7,6 @@ import {getAllCars, getAllManufacturers} from "@/service/api/CarsService.jsx";
 import {Option, Select} from "@material-tailwind/react";
 import login from "@/pages/Auth/Login.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
-import AsyncSelect from "@/BugFixer/AsyncSelect.jsx";
 
 function Cars({
     cars: carsProp = null,
@@ -18,7 +17,7 @@ function Cars({
     const [cars, setCars] = useState(carsProp)
     const [paramsFilter, setParamsFilter] = useState(agencyProp ? {agency: `/agencies/${agencyProp}` } : null)
     const [allManufacturers, setAllManufacturers] = useState(null)
-    const [manufacturerValue, setManufacturerValue] = useState("*")
+    const [selectedManufacturer, setSelectedManufacturer] = useState("*")
 
     useEffect(() => {
         if(null === allManufacturers) {
@@ -29,8 +28,6 @@ function Cars({
     }, [paramsFilter])
 
     async function fetchCars() {
-        alert('iohi')
-        alert(agencyProp)
         return await getAllCars(paramsFilter);
     }
 
@@ -49,14 +46,14 @@ function Cars({
             filterRemover('manufacturer', paramsFilter, setParamsFilter)
         }
 
-        setManufacturerValue(value)
+        setSelectedManufacturer(value)
     }
     return (
-        <div className={"mb-8"}>
-            <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-6 pl-8 mb-8 flex flex-col gap-2"}>
+        <div className={"mb-[800px]"}>
+            <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3 2xl:grid-cols-6 pl-8 mb-8 flex flex-col gap-2"}>
                 <div>
                     {allManufacturers && (
-                        <Select variant="outlined" label="Fabriquant" onChange={manufacturerHandler} value={manufacturerValue}>
+                        <Select variant="outlined" label="Fabriquant" onChange={manufacturerHandler} value={selectedManufacturer}>
                             <Option value="*">Tous</Option>
                             {allManufacturers.map((manufacturer, index) => (
                                 <Option key={index} value={manufacturer.uuid} name={manufacturer.name}>
@@ -81,10 +78,10 @@ function Cars({
                     }
                 </div>
             </div>
-            <div className={"grid grid-cols-1 flex flex-col md:grid-cols-4 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8"}>
+            <div className={"grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 md:pl-8 lg:pl-8 mb-8 min-h-28"}>
                 {
                     null === cars && null !== agencyProp ? <ImageAndTextLoader />
-                        : cars.length === 0 ? (
+                        : null === cars || cars.length === 0 ? (
                             <h2>Aucune voiture trouvé.</h2>
                             ) : (
                                 cars.map(car => <Car {...car} displayAgency={displayAgencies} choseMode={choseMode}/>)

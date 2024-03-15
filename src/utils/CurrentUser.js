@@ -6,8 +6,12 @@ const CurrentUserName = () => {
     return decodedToken.full_name;
 }
 
+const CurrentUserUuid = () => {
+    return decodedToken.uuid;
+}
+
 const CurrentUserRoles = () => {
-   return decodedToken.roles;
+    return decodedToken.roles;
 }
 
 const IsAdmin = (token = null) => {
@@ -38,4 +42,4 @@ const IsCustomer = (token = null) => {
     return filteredRolesByAdmin.length > 0;
 }
 
-export {CurrentUserName, CurrentUserRoles, IsAdmin, IsDirector, IsAgent, IsCustomer}
+export {CurrentUserName, CurrentUserUuid, CurrentUserRoles, IsAdmin, IsDirector, IsAgent, IsCustomer}
