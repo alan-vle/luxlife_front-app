@@ -5,14 +5,14 @@ import {errorNotif, successNotif} from "@/utils/Notif.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 
-const ConfirmEmailService = (uuid, expires, signature, goTo) => {
+const ConfirmEmailService = (uuid, expires, signature, userData, goTo) => {
 
     const params = {
         expires: expires,
         signature: signature
     }
 
-    axios.get(`${apiUrl}/confirm-email/${uuid}`, {params})
+    axios.post(`${apiUrl}/confirm-email/${uuid}`, userData, {params: params})
         .then(result => {
             if(result.status === 200) {
                 successNotif('Votre adresse email à été vérifiée.', 'verified-email')
@@ -21,7 +21,7 @@ const ConfirmEmailService = (uuid, expires, signature, goTo) => {
             }
         })
         .catch(() => {
-            errorNotif('Le lien est invalide.')
+            errorNotif('Le lien est invalide.', 'invalid-url')
 
             goTo('/not-found')
         })

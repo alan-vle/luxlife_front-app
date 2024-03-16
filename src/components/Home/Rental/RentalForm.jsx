@@ -7,6 +7,7 @@ import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate} from "react-router";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {errorNotif, successNotif} from "@/utils/Notif.js";
+import {hoursGenerator} from "@/utils/Forms/BusinessHours.jsx";
 function RentalForm({
     fromAgency: fromAgencyProp = null,
     agencyUuid: agencyUuidProp = null,
@@ -179,29 +180,5 @@ function RentalForm({
     );
 }
 
-function hoursGenerator() {
-        let options = [];
-        let hours = 8;
-        let minutes = 0;
-        const halfHour = 30;
 
-        while (hours < 21) {
-            // Formatage de l'heure actuelle
-            let hoursStr = hours.toString().padStart(2, '0');
-            let minutesStr = minutes.toString().padStart(2, '0');
-            let hoursAndMinutes = `${hoursStr}:${minutesStr}`;
-
-            // Ajout de l'heure actuelle aux options
-            options.push(<Option value={hoursAndMinutes}>{hoursAndMinutes}</Option>);
-
-            // Incrémenter d'une demi-heure
-            minutes += halfHour;
-            if (minutes >= 60) {
-                hours++;
-                minutes = 0;
-            }
-        }
-
-        return options;
-}
 export default RentalForm;

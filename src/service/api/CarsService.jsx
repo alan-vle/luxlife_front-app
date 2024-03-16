@@ -28,13 +28,21 @@ function getAllManufacturers() {
 }
 
 function addCar(carData) {
-    axios.post(`${apiUrl}/cars`, carData, {
+    return axios.post(`${apiUrl}/cars`, carData, {
         headers: {
             ...authorization,
             'Content-Type': 'multipart/form-data'
         }})
-        .then(() => successNotif('Voiture ajouté.'))
-        .catch(() => errorNotif())
+        .then(() => {
+            successNotif('Voiture ajouté.')
+
+            return true;
+        })
+        .catch(() => {
+            errorNotif()
+
+            return false;
+        })
     ;
 }
 

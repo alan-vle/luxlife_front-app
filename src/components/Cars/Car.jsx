@@ -10,7 +10,7 @@ import {
     Typography
 } from "@material-tailwind/react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCar, faClock, faLocationDot, faPenToSquare, faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {faCar, faClock, faLocationDot, faPenToSquare, faPlus, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useRef, useState} from "react";
 import {IsAdmin, IsDirector} from "@/utils/CurrentUser.js";
 import {addCar, getAllManufacturers} from "@/service/api/CarsService.jsx";
@@ -20,7 +20,17 @@ import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {errorNotif} from "@/utils/Notif.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
-function Car({displayAgency = false, choseMode, manufacturer, model, contentUrl, kilometers, agency, uuid}) {
+function Car({
+    displayAgency = false,
+    choseMode,
+    manufacturer,
+    model,
+    contentUrl,
+    kilometers,
+    status,
+    agency,
+    uuid
+}) {
     return(
         <div className={"mr-4 shadow flex flex-col col-span-2 p-8 w-96 max-w-96 mb-8"}>
             <div className={"flex justify-center"}>
@@ -37,6 +47,7 @@ function Car({displayAgency = false, choseMode, manufacturer, model, contentUrl,
                     <span><FontAwesomeIcon icon={faClock} /> {agency.isOpen ? 'Ouverte' : 'Fermée'}</span>
                 </Typography>
             }
+            <Typography variant={"paragraph"} as={"p"}>{status}</Typography>
             <div className={"flex justify-end"}>
                 {choseMode ? (<Button type={"button"} onClick={() => alert(uuid)}>Choisir</Button>)
                     : (
@@ -52,10 +63,9 @@ function Car({displayAgency = false, choseMode, manufacturer, model, contentUrl,
 }
 
 const AddCar = ({
-    openV: openProp = false,
     setReload
 }) => {
-    const [open, setOpen] = useState(openProp);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(IsDirector() || IsAdmin() ? !open : false);
     const [model, setModel] = useState(null)
     const [km, setKm] = useState(null)
@@ -85,8 +95,8 @@ const AddCar = ({
         e.preventDefault()
         e.stopPropagation()
         if(model && km && pricePerKm && carImage && selectedManufacturer && selectedAgency) {
-            const intKm = parseInt(km);
             const carFormData = new FormData();
+
             carFormData.append('agency', `/agencies/${selectedAgency}`);
             carFormData.append('manufacturer', `/manufacturers/${selectedManufacturer}`);
             carFormData.append('status', status)
@@ -94,11 +104,14 @@ const AddCar = ({
             carFormData.append('kilometers', km);
             carFormData.append('pricePerKilometer', pricePerKm);
             carFormData.append('file', carImage);
-            console.log(carFormData)
-            addCar(carFormData)
-            // formRef.current.reset()
-            // setOpen(false)
-            setReload(true)
+
+            addCar(carFormData).then(result => {
+                if(result) {
+                    setReload(true)
+                    setOpen(false)
+                    formRef.current.reset()
+                }
+            })
         } else {
             errorNotif('Remplissez le formulaire correctement.')
         }
@@ -108,6 +121,7 @@ const AddCar = ({
         <>
             <Button type={"button"} variant={"gradient"} onClick={() => setOpen(!open)}>
                 <FontAwesomeIcon icon={faCar} size={"lg"} />
+                <FontAwesomeIcon icon={faPlus} className={"pb-2"}/>
             </Button>
             <Dialog open={open} size={"md"} handler={handleOpen}>
                 <DialogBody>

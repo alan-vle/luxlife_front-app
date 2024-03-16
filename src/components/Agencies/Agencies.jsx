@@ -3,29 +3,28 @@ import {
     Select,
     Option,
     Typography,
-    Spinner,
     Input,
-    CardBody,
     List,
-    ListItem,
-    Button, CardFooter, CardHeader
+    Button,
 } from "@material-tailwind/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock, faLocationDot, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useState} from "react";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
 import DefaultLoader from "@/components/Loader/DefaultLoader.jsx";
-import Agency from "@/components/Agencies/Agency.jsx";
+import {AddAgency, Agency} from "@/components/Agencies/Agency.jsx";
 import {useNavigate} from "react-router";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const Agencies = () => {
     const [agencies, setAgencies] = useState(null)
     const [paramsFilter, setParamsFilter] = useState(null)
+    const [reload, setReload] = useState(null)
 
     useEffect(() => {
         fetchAgencies().then(result => setAgencies(result));
-    }, [paramsFilter]);
+
+        setReload(false)
+    }, [paramsFilter, reload]);
 
     async function fetchAgencies() {
         return await getAllAgencies(paramsFilter);
@@ -48,8 +47,12 @@ const Agencies = () => {
             filterRemover(key, paramsFilter, setParamsFilter)
         }
     }
+
     return (
         <Card className="h-max] justify-center w-2/4 overflow-scroll">
+            <div className={"flex justify-start mb-4"}>
+                <AddAgency setReload={setReload} />
+            </div>
             <table className="table-auto text-center min-h-[400px]">
                 <thead className={"max-h-fit"}>
                 <tr>

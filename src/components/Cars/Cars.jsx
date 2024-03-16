@@ -5,6 +5,7 @@ import {Option, Select} from "@material-tailwind/react";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
 import {IsAdmin, IsDirector} from "@/utils/CurrentUser.js";
 import {AddCar, Car} from "@/components/Cars/Car.jsx";
+import {isAuth} from "@/utils/auth.js";
 
 function Cars({
     cars: carsProp = null,
@@ -24,6 +25,8 @@ function Cars({
         }
 
         fetchCars().then(result => setCars(result))
+
+        setReload(false)
     }, [paramsFilter, reload])
 
     async function fetchCars() {
@@ -50,16 +53,17 @@ function Cars({
 
     return (
         <div className={"mb-[800px]"}>
-            <div className={"flex justify-start w-96"}>
-               <AddCar setReload={setReload} />
-            </div>
+            {isAuth() && (IsAdmin() || IsDirector()) ? (
+                <div className={"flex justify-start w-96 pl-8 mb-4"}>
+                    <AddCar setReload={setReload} />
+                </div>
+            ) : ''}
             <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-3 2xl:grid-cols-6 pl-8 mb-8 flex flex-col gap-2"}>
                 <div>
                     {allManufacturers && (
                         <Select variant="outlined" label="Fabriquant" onChange={manufacturerHandler} value={selectedManufacturer}>
-                            <Option value="*">Tous</Option>
-                            {allManufacturers.map((manufacturer, index) => (
-                                <Option key={index} value={manufacturer.uuid} name={manufacturer.name}>
+                            {[{ uuid: "*", name: "Tous" }, ...allManufacturers].map((manufacturer, index) => (
+                                <Option key={index} value={manufacturer.uuid}>
                                     {manufacturer.name}
                                 </Option>
                             ))}
@@ -70,8 +74,7 @@ function Cars({
                     {
                         cars && (
                             <Select variant="outlined" label="Modèle">
-                                <Option value={"*"}>Tous</Option>
-                                {cars.map((car, index) => (
+                                {[{ uuid: "*", model: "Tous" }, ...cars].map((car, index) => (
                                     <Option key={index} value={car.uuid}>
                                         {car.model}
                                     </Option>

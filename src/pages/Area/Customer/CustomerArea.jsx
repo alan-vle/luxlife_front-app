@@ -8,10 +8,6 @@ import {
     faLandmark,
     faRectangleList
 } from "@fortawesome/free-solid-svg-icons";
-import {faUsers} from "@fortawesome/free-solid-svg-icons/faUsers";
-import Agency from "@/components/Agencies/Agency.jsx";
-import Cars from "@/components/Cars/Cars.jsx";
-import Users from "@/components/Users/Users.jsx";
 import MainBlock from "@/components/parts/MainBlock.jsx";
 
 const CustomerArea = () => {

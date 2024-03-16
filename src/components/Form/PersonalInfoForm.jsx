@@ -8,12 +8,12 @@ import {
 } from "@/utils/Forms/Validator/Validator.jsx";
 import {RegisterService} from "@/service/api/AuthentificationService.jsx";
 import {errorNotif} from "@/utils/Notif.js";
-import {Button, Card, CardBody, Input, Typography} from "@material-tailwind/react";
+import {Button, Card, CardBody, Input, Option, Select, Typography} from "@material-tailwind/react";
 import {OneFieldPassword, PasswordTooltips} from "@/utils/Forms/Password.jsx";
 import {patchUser} from "@/service/api/UsersService.jsx";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {useUser} from "@/store/UserContext.jsx";
-import {CurrentUserUuid} from "@/utils/CurrentUser.js";
+import {CurrentUserUuid, IsAdmin} from "@/utils/CurrentUser.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
 
@@ -48,7 +48,6 @@ const   PersonalInfoForm = ({
     adminMode = false,
     width = null,
     height = null,
-    setUpdateStatusCallback,
     setReload
 }) => {
     const [fullName, setFullName] = useState(fullNameProp);
@@ -80,11 +79,13 @@ const   PersonalInfoForm = ({
     const [passwordNumber, setPasswordNumber] = useState(false);
     const [passwordSymbol, setPasswordSymbol] = useState(false);
     const [allAgencies, setAllAgencies] = useState(null)
+    const [agency, setAgency] = useState(null)
+    const [role, setRole] = useState(null)
     const goTo = useNavigate()
     const { updateUser } = useUser();
 
     useEffect(() => {
-        if(null !== agencyProp) {
+        if(adminMode) {
             fetchAllAgencies().then(result => setAllAgencies(result))
         }
     }, [])
@@ -149,25 +150,28 @@ const   PersonalInfoForm = ({
                 phoneNumber:  !phoneNumber && phoneNumberProp ? phoneNumberProp : phoneNumberNormalizer(phoneNumber)
             }
 
-            if(createMode) {
-                if(false === adminMode && passwordIsValid && confirmPasswordIsValid) {
-                    userData['plainPassword'] = password
+            if(createMode && false === adminMode) {
+                RegisterService(userData, goTo)
+            } else if(createMode && adminMode) {
+                userData['agency'] = `/agencies/${agency}`
+                userData['roles'] = [role]
 
-                    RegisterService(userData, goTo)
-                } else {
-                    errorNotif('Mots de passes non valides.')
-                }
+                RegisterService(userData)
             } else {
-                if(false === adminMode && passwordIsValid && confirmPasswordIsValid && oldPassword.length > 0) {
+                if(passwordIsValid && confirmPasswordIsValid && oldPassword.length > 0) {
                     userData['plainPassword'] = password
                     userData['oldPassword'] = oldPassword
                 }
 
-                const patchedUser = patchUser(uuid, userData, setUpdateStatusCallback, setReload)
+                const patchedUser = patchUser(uuid, userData)
 
                 patchedUser.then(result => {
-                    if(uuid === CurrentUserUuid()){
-                        updateUser(result)
+                    if(null !== result) {
+                        if(uuid === CurrentUserUuid()){
+                            updateUser(result)
+                        } else {
+                            setReload(true)
+                        }
                     }
                 })
             }
@@ -194,6 +198,28 @@ const   PersonalInfoForm = ({
                             </Typography>)
                         }
                         <div className={"grid md:grid-cols-2 lg:grid-cols-2 flex flex-col gap-2 mt-8 placeholder:text-slate-400 w-full"}>
+                            {IsAdmin() && adminMode && (
+                                <>
+                                    <div className={"mb-4"}>
+                                        {allAgencies && (
+                                            <Select label={"Agence"} onChange={(value) => setAgency(value)}>
+                                                {[{ uuid: "*", city: "Tous" }, ...allAgencies].map((agency, index) => (
+                                                    <Option key={index} value={agency.uuid}>
+                                                        {agency.city} {agency.zipCode}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        )}
+                                    </div>
+                                    <div className={"mb-4"}>
+                                        <Select label={"Role"} onChange={(value) => setRole(value)}>
+                                            <Option value={"director"}>Directeur</Option>
+                                            <Option value={"agent"}>Agent</Option>
+                                            <Option value={"customer"}>Client</Option>
+                                        </Select>
+                                    </div>
+                                </>
+                            )}
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
                                        onChange={fullNameHandler}
@@ -227,7 +253,7 @@ const   PersonalInfoForm = ({
                                        value={birthDateProp && null === birthDate ? birthDateProp.split('T')[0] : birthDate}
                                 />
                             </div>
-                            {!adminMode && (
+                            {!adminMode && !createMode && (
                                 <>
                                     <div className={"mb-4 w-full"}>
                                         <OneFieldPassword
@@ -245,7 +271,7 @@ const   PersonalInfoForm = ({
                                             error={confirmPasswordIsNotValid}
                                         />
                                     </div>
-                                    {false === createMode && passwordIsValid && (
+                                    {passwordIsValid && (
                                         <div className={"mb-4 w-full"}>
                                             <OneFieldPassword label={"Mot de passe actuel"}
                                               onChange={(e) => setOldPassword(e.target.value)}
