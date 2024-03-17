@@ -1,6 +1,7 @@
 import axios from "axios";
 import {toast} from "react-toastify";
-import {errorNotif} from "@/utils/Notif.js";
+import {errorNotif, successNotif} from "@/utils/Notif.js";
+import {authorization, defaultHeaders} from "@/utils/ApiHeaders.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -8,7 +9,7 @@ function getAllCars(params) {
     return axios.get(`${apiUrl}/cars`, {params})
         .then(response => {
             const data = response && response.data;
-            console.log(data)
+
             return data && data;
         })
         .catch(() => errorNotif())
@@ -25,4 +26,24 @@ function getAllManufacturers() {
         .catch(() => errorNotif())
     ;
 }
-export {getAllCars, getAllManufacturers}
+
+function addCar(carData) {
+    return axios.post(`${apiUrl}/cars`, carData, {
+        headers: {
+            ...authorization,
+            'Content-Type': 'multipart/form-data'
+        }})
+        .then(() => {
+            successNotif('Voiture ajouté.')
+
+            return true;
+        })
+        .catch(() => {
+            errorNotif()
+
+            return false;
+        })
+    ;
+}
+
+export {getAllCars, getAllManufacturers, addCar}

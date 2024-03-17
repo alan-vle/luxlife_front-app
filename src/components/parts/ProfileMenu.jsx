@@ -7,7 +7,7 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import {logout} from "@/utils/auth.js";
-import {CurrentUserName} from "@/utils/CurrentUser.js";
+import {CurrentCustomerId, CurrentUserName, IsCustomer} from "@/utils/CurrentUser.js";
 import userGreyBg from "@/assets/user-bg-grey.png";
 import {Link} from "react-router-dom";
 import {useState} from "react";
@@ -31,15 +31,23 @@ function ProfileMenu() {
                             size={"sm"}
                         />
                     </div>
-                   <div className={"flex items-center ml-4"}>
+                   <div className={"flex flex-col ml-4 pt-1"}>
                        <Typography className={"font-bold"}>{userName}</Typography>
+                       {IsCustomer() && (
+                           <>
+                               <Typography as="span" variant={"paragraph"} className={"text-gray-700 text-sm"}>
+                                   N° Client :&nbsp;
+                                   <span className={"font-bold"}>{CurrentCustomerId()}</span>
+                               </Typography>
+                           </>
+                       )}
                    </div>
 
                 </div>
 
             </MenuHandler>
             <MenuList>
-                <MenuItem className="flex items-center gap-2">
+                <MenuItem className="flex items-center flex-wrap">
                     <Link to={"/account"}>
                         <svg
                             width="16"
@@ -57,7 +65,7 @@ function ProfileMenu() {
                         </svg>
 
                         <Typography variant="small" className="font-medium">
-                            Gérer mon compte
+                            Mon compte
                         </Typography>
                     </Link>
                 </MenuItem>

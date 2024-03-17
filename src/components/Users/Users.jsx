@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import {getAllUsers} from "@/service/api/UsersService.jsx";
-import {Card, Input, Option, Select, Typography} from "@material-tailwind/react";
+import {Button, Card, Input, Option, Select, Typography} from "@material-tailwind/react";
 import DefaultLoader from "@/components/Loader/DefaultLoader.jsx";
 import {filterRemover, filterUpdater} from "@/utils/filter/objectFilter.js";
-import {User} from "@/components/Users/User.jsx";
+import {AddUser, User} from "@/components/Users/User.jsx";
+import {faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const Users = ({
     agency: agencyProp = null
@@ -72,6 +74,9 @@ const Users = ({
 
     return (
         <Card className="h-full justify-center w-full overflow-scroll">
+            <div className={"flex justify-start w-96 mb-4"}>
+                <AddUser setReload={setReload}/>
+            </div>
             <table className="table-auto text-center">
                 <thead>
                 <tr>

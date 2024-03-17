@@ -7,6 +7,9 @@ import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate} from "react-router";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {errorNotif, successNotif} from "@/utils/Notif.js";
+import {hoursGenerator} from "@/utils/Forms/BusinessHours.jsx";
+import Cars from "@/components/Cars/Cars.jsx";
+import {useRentalFormContext} from "@/store/RentalFormContext.jsx";
 function RentalForm({
     fromAgency: fromAgencyProp = null,
     agencyUuid: agencyUuidProp = null,
@@ -20,6 +23,8 @@ function RentalForm({
     fromSuggestions: fromSuggestionsProp = null,
     toSuggestions: toSuggestionsProp = null
 }) {
+    const { setFormData, displayCars, setDisplayCars, formIsEmpty, setFormIsEmpty } = useRentalFormContext();
+
     const [fromAgency, setFromAgency] = useState(fromAgencyProp);
     const [agencyUuid, setAgencyUuid] = useState(agencyUuidProp);
     const [rentalType, setRentalType] = useState(rentalTypeProp);
@@ -35,26 +40,29 @@ function RentalForm({
     const suggestionsRef = useRef(null);
     const goTo = useNavigate();
 
-    function submitHandler() {
-        const rentalFields = {
-            fromAgency: fromAgency,
-            agencyUuid: agencyUuid,
-            rentalType: rentalType,
-            fromDate: fromDate,
-            fromTime: fromTime,
-            toAgency: toAgency,
-            toDate: toDate,
-            toTime: toTime
-        };
+    const submitHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-        goTo('/cars/search-result', {state: rentalFields})
+        if(fromAgency) {
+            setDisplayCars(true)
+
+            if(fromAgency && rentalType && fromDate && fromTime && toDate && toTime) {
+                setFormIsEmpty(false)
+            }
+        } else {
+            setDisplayCars(false)
+            errorNotif('Vous devez au moins choisir une agence de départ !')
+        }
     }
 
-    async function inputAgencyHandler(e, type) {
-        const inputValue = e.target.value;
-        setFromAgency(e.target.value)
-        if (inputValue.length >= 2) {
-            const foundAgencies = await getAllAgencies({'city': inputValue})
+    async function inputAgencyHandler(e, type, setter) {
+        const agencyValue = e.target.value;
+
+        setter({city: agencyValue})
+
+        if (agencyValue.length >= 2) {
+            const foundAgencies = await getAllAgencies({'city': agencyValue})
             const notFoundMessage = "Aucune agence trouvée.";
 
             if (type === 'from') {
@@ -66,6 +74,15 @@ function RentalForm({
             setFromSuggestions(null)
             setToSuggestions(null)
         }
+    }
+
+    function updateFormData(name, value, setter) {
+        setter(value)
+
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
     }
 
     useEffect(() => {
@@ -84,20 +101,22 @@ function RentalForm({
 
     return (
         <>
-            <form>
+            <form onSubmit={submitHandler}>
                 <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4 2xl:grid-cols-6 gap-4 block flex-col">
                     <div>
                         <div className={"w-full"} style={{ position: 'relative', display: 'inline-block' }}>
                             <Input size="md" label="Agence de départ" placeholder={"Marseille"}
                                    className={"required"}
-                                   onChange={(e) => inputAgencyHandler(e,'from')}
-                                   value={`${fromAgency !== null ? fromAgency : ''}`}
+                                   onChange={(e) => inputAgencyHandler(e,'from', setFromAgency)}
+                                   value={`${fromAgency !== null && fromAgency.city ? fromAgency.city : ''}`}
                             />
                             {fromSuggestions && Array.isArray(fromSuggestions) && fromSuggestions.length > 0 ? fromSuggestions.map((fromSuggestion, index) => (
                                 <List key={index} className={"border border-b-gray"}>
                                     <Button type={"button"} variant={"text"} onClick={() => {
-                                        setFromAgency(fromSuggestion.city)
-                                        setAgencyUuid(fromSuggestion.uuid)
+                                        updateFormData('fromAgency', {
+                                            city: fromSuggestion.city,
+                                            uuid: fromSuggestion.uuid
+                                        }, setFromAgency)
                                         setFromSuggestions(null)
                                     }}> {fromSuggestion.address} {fromSuggestion.city}</Button>
                                 </List>
@@ -105,7 +124,7 @@ function RentalForm({
                         </div>
                     </div>
                     <div>
-                        <Select label="Type de location" onChange={(e) => setRentalType(e)}>
+                        <Select label="Type de location" onChange={(e) => updateFormData('rentalType', e, setRentalType)}>
                             <Option value={"0"}>Classique</Option>
                             <Option value={"1"}>Longue durée</Option>
                         </Select>
@@ -113,23 +132,34 @@ function RentalForm({
                     <div>
                         <Input size="md" label="Kilomètres" placeholder={"100"}
                                className={"required"}
-                               onChange={(e) => setMileageKilometers(e.target.value)}
+                               onChange={(e) => updateFormData('mileageKilometers', e.target.value, setMileageKilometers)}
                                value={`${mileageKilometers !== null ? mileageKilometers : ''}`}
                         />
                     </div>
                     <div>
-                        <Input label="Date de prise en charge" type={"date"} onChange={(e) => setFromDate(e.target.value)}/>
+                        <Input
+                            label="Date de prise en charge" type={"date"}
+                            onChange={(e) => updateFormData('fromDate', e.target.value, setFromDate)}
+                            min={new Date().toISOString().split('T')[0]}
+                        />
                     </div>
                     <div>
-                        <Select label="Heure de départ" onChange={(e) => setFromTime(e)}>
+                        <Select label="Heure de départ" onChange={(e) => updateFormData('fromTime', e, setFromTime)}>
                             {hoursGenerator()}
                         </Select>
                     </div>
                     <div>
-                        <Input label="Date de retour" type={"date"} onChange={(e) => setToDate(e.target.value)} />
+                        <Input
+                            label="Date de retour"
+                            type={"date"}
+                            onChange={(e) => updateFormData('toDate', e.target.value, setToDate)}
+                            value={fromDate && !toDate || fromDate < toDate ? fromDate : toDate}
+                            min={fromDate ? fromDate : new Date().toISOString().split('T')[0]}
+                        />
                     </div>
                     <div>
-                        <Select label="Heure de retour" onChange={(e) => setToTime(e)}>
+
+                        <Select label="Heure de retour" onChange={(e) => updateFormData('toTime', e, setToTime)}>
                             {hoursGenerator()}
                         </Select>
                     </div>
@@ -146,10 +176,8 @@ function RentalForm({
                             returnPlace && (
                                 <div style={{ position: 'relative', display: 'inline-block' }}>
                                     <Input size="md" label="Agence de retour" placeholder={"Aix-en-provence"}
-                                       onChange={(e) => {
-                                           setToAgency(e.target.value)
-                                       }} onInput={(e) => inputAgencyHandler(e,"to")}
-                                           value={`${toAgency !== null ? toAgency : ''}`}
+                                       onInput={(e) => inputAgencyHandler(e,'to', setToAgency)}
+                                           value={`${toAgency !== null && toAgency.city !== null ? toAgency.city : ''}`}
                                     />
                                         {toSuggestions && Array.isArray(toSuggestions) && toSuggestions.length > 0 ? toSuggestions.map((toSuggestion, index) => (
                                             <List key={index} className={"border border-b-gray"}>
@@ -157,7 +185,10 @@ function RentalForm({
                                                     if(toAgency.uuid === fromAgency.uuid) {
                                                         errorNotif('Votre agence de retour n\'est pas différente de celle de départ.', 'same-agency')
                                                     } else {
-                                                        setToAgency(toSuggestion.city)
+                                                        updateFormData('toAgency', {
+                                                            city: toSuggestion.city,
+                                                            uuid: toSuggestion.uuid
+                                                        }, setToAgency)
                                                         setToSuggestions(null)
                                                     }
                                                 }}> {toSuggestion.address} {toSuggestion.city}</Button>
@@ -171,37 +202,26 @@ function RentalForm({
                     <div></div>
                     <div></div>
                     <div className="text-end">
-                        <Button className={"bg-[#cdeae1] text-black"} onClick={submitHandler}><FontAwesomeIcon icon={faMagnifyingGlass} /> Rechercher</Button>
+                        <Button className={"bg-[#cdeae1] text-black"} type={"submit"}><FontAwesomeIcon icon={faMagnifyingGlass} /> Rechercher</Button>
                     </div>
                 </div>
             </form>
+            {displayCars && (
+                <div>
+                    <div className={"mt-8"}><Cars choseMode={true} agency={agencyUuid} formIsEmpty={formIsEmpty}/></div>
+                </div>
+            )}
         </>
     );
 }
 
-function hoursGenerator() {
-        let options = [];
-        let hours = 8;
-        let minutes = 0;
-        const halfHour = 30;
+function addOneDayToFromDate(fromDate)
+{
+    const fromDateObject = new Date(fromDate);
 
-        while (hours < 21) {
-            // Formatage de l'heure actuelle
-            let hoursStr = hours.toString().padStart(2, '0');
-            let minutesStr = minutes.toString().padStart(2, '0');
-            let hoursAndMinutes = `${hoursStr}:${minutesStr}`;
+    fromDateObject.setDate(fromDateObject.getDate() + 1);
 
-            // Ajout de l'heure actuelle aux options
-            options.push(<Option value={hoursAndMinutes}>{hoursAndMinutes}</Option>);
-
-            // Incrémenter d'une demi-heure
-            minutes += halfHour;
-            if (minutes >= 60) {
-                hours++;
-                minutes = 0;
-            }
-        }
-
-        return options;
+    return fromDateObject.toISOString().split('T')[0];
 }
+
 export default RentalForm;

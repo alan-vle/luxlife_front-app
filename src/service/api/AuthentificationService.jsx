@@ -3,17 +3,17 @@ import {toast} from "react-toastify";
 import {errorNotif, successNotif} from "@/utils/Notif.js";
 import {IsAdmin, IsAgent, IsDirector} from "@/utils/CurrentUser.js";
 import {jwtDecode} from "jwt-decode";
-import {jsonContentType} from "@/utils/ApiHeaders.js";
+import {defaultHeaders, jsonContentType} from "@/utils/ApiHeaders.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-const RegisterService = (registerData, goTo) => {
+const RegisterService = (registerData, goTo = null) => {
 
-    axios.post(`${apiUrl}/register`, registerData, {headers: jsonContentType})
+    axios.post(`${apiUrl}/register`, registerData, {headers: goTo ? jsonContentType : defaultHeaders})
         .then(() => {
             successNotif('Inscription réussie ! Vérifiez votre email pour vous connecter.')
 
-            goTo('/login')
+            goTo && goTo('/login')
         })
         .catch(error => {
             const response = error.response

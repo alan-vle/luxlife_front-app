@@ -6,6 +6,6 @@ import { ThemeProvider } from "@material-tailwind/react";
 import {dialog} from "@material-tailwind/react";
 ReactDOM.createRoot(document.getElementById('root')).render(
     <ThemeProvider>
-    <App />
+        <App />
     </ThemeProvider>
 )

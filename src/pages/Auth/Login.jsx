@@ -44,9 +44,8 @@ const Login = () => {
     }
 
     return (
-        <div className={"grid grid-cols-12 mt-28 mb-28"}>
-            <div className={"md:col-span-4 lg:col-span-4"}></div>
-            <div className={"col-span-12 md:col-span-4 lg:col-span-4 w-fit"}>
+        <div className={"grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 lg:gap-8 xl:grid-cols-12 2xl:grid-cols-12 gap-2 mt-28 mb-28"}>
+            <div className={"xl:col-start-5 xl:col-span-4 2xl:col-start-5 2xl:col-span-4 flex justify-center"}>
                 <form onSubmit={submitHandler}>
                     <Card>
                         <CardBody>
@@ -76,7 +75,6 @@ const Login = () => {
                 </form>
 
             </div>
-            <div className={"col-span-5"}></div>
         </div>
     )
 }

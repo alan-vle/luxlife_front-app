@@ -1,34 +1,39 @@
-import {Button, Card, CardBody, CardHeader, Input, Typography} from "@material-tailwind/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faFacebook, faInstagram} from "@fortawesome/free-brands-svg-icons";
-import {Link} from "react-router-dom";
-import mailboxImage from "../../assets/mailbox.png"
-import manHelperImage from "../../assets/man-helper.png"
+import { Button, Typography } from "@material-tailwind/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
+import manHelperImage from "../../assets/man-helper.png";
 import NewsletterBlock from "@/components/parts/NewsletterBlock.jsx";
-import {useEffect, useState} from "react";
-import {useLocation} from "react-router";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+
 export function Footer() {
-    const [displayNewsletter, setDisplayNewsletter] = useState(true)
+    const [displayNewsletter, setDisplayNewsletter] = useState(true);
     const location = useLocation();
-    const {pathname} = location;
+    const { pathname } = location;
 
     useEffect(() => {
-        if(
+        if (
             pathname === '/account' || pathname === '/admin-area'
             || pathname === '/my-agency' || pathname === '/dashboard'
         ) {
-            setDisplayNewsletter(false)
+            setDisplayNewsletter(false);
         }
-    })
-
+    });
 
     return (
-        <>
+        <div className={"hidden"}>
             <div className="grid grid-cols-4 gap-4">
                 <div></div>
-                <div className="col-span-2"><div className={false === displayNewsletter ? 'hidden' : ''}><NewsletterBlock /></div></div>
+                <div className="col-span-2 relative">
+                    <div className={false === displayNewsletter ? 'hidden' : 'absolute bottom-0'}>
+                        <NewsletterBlock />
+                    </div>
+                </div>
                 <div className="flex justify-end items-end pr-8">
-                    <Button variant={"text"} onClick={() => alert('Do you need help? Ok')}><img src={manHelperImage} alt=""/></Button>
+                    <Button variant={"text"} onClick={() => alert('Do you need help? Ok')}>
+                        <img src={manHelperImage} alt=""/>
+                    </Button>
                 </div>
             </div>
 
@@ -62,7 +67,7 @@ export function Footer() {
                             color="blue-gray"
                             className="font-normal transition-colors hover:text-blue-500 focus:text-blue-500"
                         >
-                           Nous contacter
+                            Nous contacter
                         </Typography>
                     </li>
                     <li>
@@ -87,7 +92,8 @@ export function Footer() {
                     </li>
                 </ul>
             </footer>
-        </>
+        </div>
     );
 }
+
 export default Footer;

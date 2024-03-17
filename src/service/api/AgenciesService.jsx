@@ -1,6 +1,6 @@
 import axios from "axios";
-import {errorNotif} from "@/utils/Notif.js";
-import {authorization} from "@/utils/ApiHeaders.js";
+import {errorNotif, successNotif} from "@/utils/Notif.js";
+import {authorization, defaultHeaders} from "@/utils/ApiHeaders.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function getAllAgencies(params) {
@@ -24,5 +24,15 @@ function getAgency(agencyUuid) {
     ;
 }
 
+function addAgency(agencyData) {
+    return axios.post(`${apiUrl}/agencies`, agencyData, {headers: defaultHeaders})
+        .then(() => {
+            successNotif('Agence ajouté.')
 
-export {getAllAgencies, getAgency};
+            return true;
+        })
+        .catch(() => errorNotif())
+    ;
+}
+
+export {getAllAgencies, getAgency, addAgency};

@@ -26,7 +26,7 @@ function getUser(userUuid) {
     ;
 }
 
-function patchUser(userUuid, userData, setUpdateStatusCallback, setReload, updateUser) {
+function patchUser(userUuid, userData, setReload) {
     return axios.patch(`${apiUrl}/users/${userUuid}`, userData, {headers: authorization})
         .then((response) => {
             if(CurrentUserUuid() === response.data.uuid) {
@@ -34,7 +34,8 @@ function patchUser(userUuid, userData, setUpdateStatusCallback, setReload, updat
                 return response.data.fullName
             } else {
                 successNotif('Utilisateur modifié.', 'modified-user')
-                setReload(true)
+
+                return true;
             }
         })
         .catch(error => {
@@ -46,22 +47,15 @@ function patchUser(userUuid, userData, setUpdateStatusCallback, setReload, updat
                 const emailAlreadyUsed = constraints && constraints.filter(constraint => constraint.field === "email" && constraint.message ===  "This email is already used.");
 
                 if(undefined !== emailAlreadyUsed && emailAlreadyUsed.length > 0) {
-                    if(null === setUpdateStatusCallback) {
-                        errorNotif('Email déja utilisée.')
-                    } else {
-                        setUpdateStatusCallback('Email déja utilisée.')
-                    }
+                    errorNotif('Email déja utilisée.')
                 } else if(data.message === 'The old password is incorrect.') {
                     errorNotif('Votre ancien mot de passe est incorrect.')
                 }
             } else {
-                if(null === setUpdateStatusCallback) {
-                    errorNotif()
-                } else {
-                    setUpdateStatusCallback('Un problème est survenue.')
-                }
+                errorNotif()
             }
 
+            return null;
         })
 }
 

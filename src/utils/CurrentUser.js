@@ -14,6 +14,10 @@ const CurrentUserRoles = () => {
     return decodedToken.roles;
 }
 
+const CurrentCustomerId = () => {
+    return decodedToken.customer_id;
+}
+
 const IsAdmin = (token = null) => {
     const roles = !token ? CurrentUserRoles() : token
     const filteredRolesByAdmin = roles.filter(role => role === 'ROLE_ADMIN')
@@ -42,4 +46,4 @@ const IsCustomer = (token = null) => {
     return filteredRolesByAdmin.length > 0;
 }
 
-export {CurrentUserName, CurrentUserUuid, CurrentUserRoles, IsAdmin, IsDirector, IsAgent, IsCustomer}
+export {CurrentUserName, CurrentUserUuid, CurrentUserRoles, CurrentCustomerId, IsAdmin, IsDirector, IsAgent, IsCustomer}

@@ -15,12 +15,12 @@ const MainBlock = () => {
         <div className={`grid grid-cols-12 mt-4 ${autoMarginBottom && `mb-[${autoMarginBottom}px]`}`}>
             <div className={"col-span-12 relative"}>
                 <img src={carBackgroundHome} alt={"Car background for home"} style={{"width": "100%", "height": "50%"}}/>
-                <div className={"flex justify-center absolute top-1/3 w-full h-fit"}>
-                    <Card>
+                <div className={"flex justify-center absolute top-1/3 w-full max-h-fit"}>
+                    <Card className={""}>
                         <CardHeader
                             shadow={false}
                             floated={false}
-                            className="m-0 w-full shrink-0"
+                            className="m-0 w-full shrink-0 max-h-fit"
                         >
                             <div className={"flex items-center gap-4"}>
                                 <Button className={
@@ -52,7 +52,9 @@ const MainBlock = () => {
                                 </Button>
                             </div>
                         </CardHeader>
-                        <CardBody>{content === 'form' ? <RentalForm /> : <ListOfCars />}</CardBody>
+                        <CardBody>
+                            {content === 'form' ? <RentalForm /> : <ListOfCars />}
+                        </CardBody>
                     </Card>
                 </div>
             </div>
