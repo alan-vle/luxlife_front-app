@@ -10,21 +10,26 @@ import {
     Select,
     Typography
 } from "@material-tailwind/react";
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router";
 import {hoursGenerator} from "@/utils/Forms/BusinessHours.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMoneyCheck} from "@fortawesome/free-solid-svg-icons";
+import {errorNotif} from "@/utils/Notif.js";
+import {addRental} from "@/service/api/RentalsService.jsx";
+import {IsCustomer} from "@/utils/CurrentUser.js";
+import {RegisterService} from "@/service/api/AuthentificationService.jsx";
+import {isAuth} from "@/utils/auth.js";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const RentalProcess = () => {
     const { formData, setFormData } = useRentalFormContext();
     const goTo = useNavigate();
     const car = formData.car || null;
-    console.log(car)
+
     useEffect(() => {
         if (!car) {
-            // goTo('/not-found');
+            goTo('/not-found');
         }
     }, []);
 
@@ -35,6 +40,52 @@ const RentalProcess = () => {
         }));
     }
 
+    const submitHandler = (e) => {
+        if(!isAuth()) {
+            alert('Créer un compte et revenez...')
+        } else {
+            if(
+                formData.car && formData.fromAgency && formData.fromDate && formData.fromTime
+                && formData.contract && formData.toDate && formData.toTime && formData.mileageKilometers
+            ) {
+                const rentalData = {
+                    car: `/cars/${car.uuid}`,
+                    contract: formData.contract,
+                    fromDate: `${formData.fromDate} ${formData.fromTime}`,
+                    toDate: `${formData.toDate} ${formData.toTime}`,
+                    mileageKilometers: parseInt(formData.mileageKilometers, 10),
+                }
+
+                const btnValue = e.target.value
+
+                if(btnValue === 'draft') {
+                    rentalData['draftRental'] = true
+                }
+
+                if(!IsCustomer()) {
+                    const newCustomerData = {
+                        fullName: 'fullName',
+                        email: 'email',
+                        phoneNumber: 'phoneNumber',
+                        birthDate: 'birthDate',
+                        address: 'address'
+                    }
+
+                    const [customerUuid, setCustomerUuid] = useState(null)
+
+                    RegisterService(newCustomerData).then(result => setCustomerUuid(result))
+                    rentalData['customer'] = `/users/${customerUuid}`
+                }
+                addRental(rentalData)
+
+                if(IsCustomer()) {
+                    goTo('/dashboard')
+                }
+            } else {
+                errorNotif('Le formulaire n\'est pas correctement rempli.')
+            }
+        }
+    }
     return (
         <>
             {car && (
@@ -132,7 +183,7 @@ const RentalProcess = () => {
                                     {car.model}
                                 </Typography>
                                 <Typography>
-                                    {car.kilometers}
+                                    {car.kilometers} km
                                 </Typography>
                             </CardBody>
                         </Card>
@@ -162,8 +213,9 @@ const RentalProcess = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <Button type={"submit"} variant={"gradient"}>Valider</Button>
+                            <div className={"gap-4"}>
+                                <Button type={"button"} variant={"gradient"} className={"mr-4"} onClick={submitHandler} value={"real"}>Valider</Button>
+                                <Button type={"button"} variant={"outlined"} onClick={submitHandler} value={"draft"}>Sauvegarder</Button>
                             </div>
                         </div>
                     </div>

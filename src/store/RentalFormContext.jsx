@@ -5,7 +5,7 @@ const RentalFormContext = createContext(null);
 export const RentalFormProvider = ({ children }) => {
     const [formData, setFormData] = useState({
         fromAgency: null,
-        rentalType: null,
+        contract: null,
         mileageKilometers: null,
         fromDate: null,
         fromTime: null,

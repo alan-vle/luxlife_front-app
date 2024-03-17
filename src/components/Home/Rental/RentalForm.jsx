@@ -13,7 +13,7 @@ import {useRentalFormContext} from "@/store/RentalFormContext.jsx";
 function RentalForm({
     fromAgency: fromAgencyProp = null,
     agencyUuid: agencyUuidProp = null,
-    rentalType: rentalTypeProp = null,
+    contract: contractProp = null,
     fromDate: fromDateProp = null,
     fromTime: fromTimeProp = null,
     toAgency: toAgencyProp = null,
@@ -26,8 +26,7 @@ function RentalForm({
     const { formData, setFormData } = useRentalFormContext();
 
     const [fromAgency, setFromAgency] = useState(fromAgencyProp);
-    const [agencyUuid, setAgencyUuid] = useState(agencyUuidProp);
-    const [rentalType, setRentalType] = useState(rentalTypeProp);
+    const [contract, setContract] = useState(contractProp);
     const [fromDate, setFromDate] = useState(fromDateProp);
     const [fromTime, setFromTime] = useState(fromTimeProp);
     const [toAgency, setToAgency] = useState(toAgencyProp);
@@ -123,7 +122,7 @@ function RentalForm({
                         </div>
                     </div>
                     <div>
-                        <Select label="Type de location" onChange={(e) => updateFormData('rentalType', e, setRentalType)}>
+                        <Select label="Type de location" onChange={(e) => updateFormData('contract', e, setContract)}>
                             <Option value={"0"}>Classique</Option>
                             <Option value={"1"}>Longue durée</Option>
                         </Select>

@@ -43,7 +43,7 @@ const CustomerArea = () => {
             </TabsHeader>
             <TabsBody>
                 <TabPanel value={'current-location'} className={"pl-9"}>
-                    Current
+                    <Rentals status={3} currentRental={true}/>
                 </TabPanel>
                 <TabPanel value={'rentals-history'} className={"pl-9"}>
                     <Rentals />
