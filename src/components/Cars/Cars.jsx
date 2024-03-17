@@ -11,8 +11,7 @@ function Cars({
     cars: carsProp = null,
     displayAgencies,
     agency: agencyProp = null,
-    choseMode,
-    formIsEmpty = null
+    choseMode
 }) {
     const [cars, setCars] = useState(carsProp)
     const [paramsFilter, setParamsFilter] = useState(agencyProp ? {agency: `/agencies/${agencyProp}` } : null)
@@ -91,7 +90,7 @@ function Cars({
                         : null === cars || cars.length === 0 ? (
                             <h2>Aucune voiture trouvé.</h2>
                             ) : (
-                                cars.map(car => <Car {...car} displayAgency={displayAgencies} choseMode={choseMode} formIsEmpty={formIsEmpty}/>)
+                                cars.map(car => <Car {...car} displayAgency={displayAgencies} choseMode={choseMode}/>)
                             )
                 }
             </div>

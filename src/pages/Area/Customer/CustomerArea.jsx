@@ -9,6 +9,7 @@ import {
     faRectangleList
 } from "@fortawesome/free-solid-svg-icons";
 import MainBlock from "@/components/parts/MainBlock.jsx";
+import Rentals from "@/components/Rentals/Rentals.jsx";
 
 const CustomerArea = () => {
     return (
@@ -42,10 +43,10 @@ const CustomerArea = () => {
             </TabsHeader>
             <TabsBody>
                 <TabPanel value={'current-location'} className={"pl-9"}>
-                    <p>Current location</p>
+                    Current
                 </TabPanel>
                 <TabPanel value={'rentals-history'} className={"pl-9"}>
-                    <p>Location history</p>
+                    <Rentals />
                 </TabPanel>
                 <TabPanel value={"new-rental"} className={"w-full"}>
                     <MainBlock />

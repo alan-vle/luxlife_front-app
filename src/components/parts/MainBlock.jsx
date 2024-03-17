@@ -12,7 +12,7 @@ const MainBlock = () => {
     const [selectedBorder, setSelectedBorder] = useState('form');
     const [autoMarginBottom, setAutoMarginBottom] = useState(null)
     return (
-        <div className={`grid grid-cols-12 mt-4 ${autoMarginBottom && `mb-[${autoMarginBottom}px]`}`}>
+        <div className={`grid grid-cols-12 mt-4 ${autoMarginBottom && `mb-[${autoMarginBottom}px]`} h-full`}>
             <div className={"col-span-12 relative"}>
                 <img src={carBackgroundHome} alt={"Car background for home"} style={{"width": "100%", "height": "50%"}}/>
                 <div className={"flex justify-center absolute top-1/3 w-full max-h-fit"}>

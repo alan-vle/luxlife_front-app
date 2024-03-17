@@ -15,11 +15,8 @@ export const RentalFormProvider = ({ children }) => {
         car: null
     });
 
-    const [displayCars, setDisplayCars] = useState(false);
-    const [formIsEmpty, setFormIsEmpty] = useState(true);
-
     return (
-        <RentalFormContext.Provider value={{ formData, setFormData, displayCars, setDisplayCars, formIsEmpty, setFormIsEmpty }}>
+        <RentalFormContext.Provider value={{ formData, setFormData}}>
             {children}
         </RentalFormContext.Provider>
     );
