@@ -44,7 +44,7 @@ const User = ({
             <Dialog open={open} size={"md"} handler={handleOpen}>
                 <DialogHeader>{updateStatusCallback && updateStatusCallback}</DialogHeader>
                 <DialogBody>
-                    <PersonalInfoForm {...user} adminMode={true} setUpdateStatusCallback={setUpdateStatusCallback} setReload={setReload}/>
+                    <PersonalInfoForm {...user} adminMode={true} setReload={setReload} setOpen={setOpen}/>
                 </DialogBody>
                 <DialogFooter>
                     <Button
@@ -139,10 +139,9 @@ const AddUser = ({
             <Button type={"button"} variant={"gradient"} onClick={() => setOpen(!open)}>
                 <FontAwesomeIcon icon={faUserPlus} size={"lg"} />
             </Button>
-            <Dialog open={open} size={"md"} handler={handleOpen}>
-                <DialogHeader>aa</DialogHeader>
+            <Dialog open={open} size={"md"} handler={handleOpen} className={"h-3/4"}>
                 <DialogBody>
-                    <PersonalInfoForm createMode={true} adminMode={true} setReload={setReload}/>
+                    <PersonalInfoForm createMode={true} adminMode={true} setReload={setReload} setOpen={setOpen}/>
                 </DialogBody>
                 <DialogFooter>
                     <Button

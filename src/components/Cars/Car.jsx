@@ -18,19 +18,45 @@ import {token} from "@/utils/auth.js";
 import {jwtDecode} from "jwt-decode";
 import {getAllAgencies} from "@/service/api/AgenciesService.jsx";
 import {errorNotif} from "@/utils/Notif.js";
+import {useRentalFormContext} from "@/store/RentalFormContext.jsx";
+import {useNavigate} from "react-router";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function Car({
     displayAgency = false,
     choseMode,
+    formIsEmpty = null,
     manufacturer,
     model,
     contentUrl,
     kilometers,
     status,
     agency,
-    uuid
+    uuid,
 }) {
+    const {formData, setFormData} = useRentalFormContext();
+    const goTo = useNavigate()
+
+    const chosenCarHandler = (e) => {
+        if(formIsEmpty) {
+            errorNotif('Veuillez renseignez les informations de votre location.')
+        } else {
+            const carData = {
+                 manufacturer: manufacturer,
+                 model: model,
+                 contentUrl: contentUrl,
+                 kilometers: kilometers,
+                 status: status,
+                 uuid: uuid,
+            }
+            setFormData(prevState => ({
+                ...prevState,
+                ['car']: carData,
+            }));
+
+            goTo('/rental-process')
+        }
+    }
     return(
         <div className={"mr-4 shadow flex flex-col col-span-2 p-8 w-96 max-w-96 mb-8"}>
             <div className={"flex justify-center"}>
@@ -49,7 +75,7 @@ function Car({
             }
             <Typography variant={"paragraph"} as={"p"}>{status}</Typography>
             <div className={"flex justify-end"}>
-                {choseMode ? (<Button type={"button"} onClick={() => alert(uuid)}>Choisir</Button>)
+                {choseMode ? (<Button type={"button"} onClick={chosenCarHandler}>Choisir</Button>)
                     : (
                         <Button type={"button"} variant={"text"} onClick={() => alert(uuid)}>
                             <FontAwesomeIcon icon={faPenToSquare} size={"2xl"} style={{color: "#e01b24"}} />

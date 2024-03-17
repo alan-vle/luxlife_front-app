@@ -35,7 +35,10 @@ function ProfileMenu() {
                        <Typography className={"font-bold"}>{userName}</Typography>
                        {IsCustomer() && (
                            <>
-                               <Typography as="span" variant={"paragraph"} className={"text-gray-700 text-sm"}>{CurrentCustomerId()}</Typography>
+                               <Typography as="span" variant={"paragraph"} className={"text-gray-700 text-sm"}>
+                                   N° Client :&nbsp;
+                                   <span className={"font-bold"}>{CurrentCustomerId()}</span>
+                               </Typography>
                            </>
                        )}
                    </div>

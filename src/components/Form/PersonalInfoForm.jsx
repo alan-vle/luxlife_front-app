@@ -16,6 +16,7 @@ import {useUser} from "@/store/UserContext.jsx";
 import {CurrentUserUuid, IsAdmin} from "@/utils/CurrentUser.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleExclamation} from "@fortawesome/free-solid-svg-icons";
+import {isAuth} from "@/utils/auth.js";
 
 function IconOutlined() {
     return (
@@ -46,9 +47,8 @@ const   PersonalInfoForm = ({
     uuid = null,
     createMode = false,
     adminMode = false,
-    width = null,
-    height = null,
-    setReload
+    setOpen,
+    setReload,
 }) => {
     const [fullName, setFullName] = useState(fullNameProp);
     const [fullNameIsValid, setFullNameIsValid] = useState(!createMode);
@@ -150,14 +150,17 @@ const   PersonalInfoForm = ({
                 phoneNumber:  !phoneNumber && phoneNumberProp ? phoneNumberProp : phoneNumberNormalizer(phoneNumber)
             }
 
+            // Simple customer registration
             if(createMode && false === adminMode) {
                 RegisterService(userData, goTo)
-            } else if(createMode && adminMode) {
+            } else if(createMode && adminMode) { // Creation mode for admin
                 userData['agency'] = `/agencies/${agency}`
                 userData['roles'] = [role]
 
                 RegisterService(userData)
-            } else {
+
+                setOpen(false)
+            } else { // Modification for logged user
                 if(passwordIsValid && confirmPasswordIsValid && oldPassword.length > 0) {
                     userData['plainPassword'] = password
                     userData['oldPassword'] = oldPassword
@@ -171,6 +174,7 @@ const   PersonalInfoForm = ({
                             updateUser(result)
                         } else {
                             setReload(true)
+                            setOpen(false)
                         }
                     }
                 })
@@ -182,8 +186,8 @@ const   PersonalInfoForm = ({
     }
 
     return (
-        <div className={`grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-12 2xl:grid-cols-12 ${createMode && 'mt-28'} mb-28`}>
-            <div className={"col-span-12 flex justify-center w-full h-auto"}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 xl:grid-cols-12 2xl:grid-cols-12 ${createMode && 'mt-28 mb-96'}`}>
+            <div className={"col-span-12 flex justify-center w-full"}>
                 <Card>
                     <CardBody>
                         {!adminMode && (
@@ -194,16 +198,16 @@ const   PersonalInfoForm = ({
                         {false === requiredAge && (
                             <Typography variant={"p"} color={"white"} className={"bg-red-500 mb-4 font-bold p-4 rounded"}>
                                 <FontAwesomeIcon icon={faCircleExclamation} className={"mr-4"} style={{color: "#ffffff",}} size={"xl"} />
-                                Vous devez avoir 18 ans !
+                                {adminMode? 'La personne doit' : 'Vous devez'} avoir 18 ans !
                             </Typography>)
                         }
                         <div className={"grid md:grid-cols-2 lg:grid-cols-2 flex flex-col gap-2 mt-8 placeholder:text-slate-400 w-full"}>
-                            {IsAdmin() && adminMode && (
+                            {isAuth() && IsAdmin() && adminMode ? (
                                 <>
                                     <div className={"mb-4"}>
                                         {allAgencies && (
                                             <Select label={"Agence"} onChange={(value) => setAgency(value)}>
-                                                {[{ uuid: "*", city: "Tous" }, ...allAgencies].map((agency, index) => (
+                                                {allAgencies.map((agency, index) => (
                                                     <Option key={index} value={agency.uuid}>
                                                         {agency.city} {agency.zipCode}
                                                     </Option>
@@ -219,7 +223,7 @@ const   PersonalInfoForm = ({
                                         </Select>
                                     </div>
                                 </>
-                            )}
+                            ) : ''}
                             <div className={"mb-4 "}>
                                 <Input label={"Nom"} placeholder={"Ex : Jon Jony"}
                                        onChange={fullNameHandler}
@@ -303,7 +307,6 @@ const   PersonalInfoForm = ({
                     </CardBody>
                 </Card>
             </div>
-            <div className={"col-span-3"}></div>
         </div>
     )
 }
