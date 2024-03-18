@@ -1,5 +1,4 @@
 import axios from "axios";
-import {toast} from "react-toastify";
 import {jsonContentType} from "@/utils/ApiHeaders.js";
 import {errorNotif, successNotif} from "@/utils/Notif.js";
 const apiUrl = import.meta.env.VITE_API_URL;
