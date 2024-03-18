@@ -1,6 +1,4 @@
-<div style="text-align:center">
-  <img src="src/assets/luxlife_logo.png" alt="Luxlife logo"/>
-</div>
+![alt text](src/assets/luxlife_logo.png)
 
 ## Installation
 
