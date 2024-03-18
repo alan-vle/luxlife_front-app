@@ -95,12 +95,13 @@ const Agency = ({
                     {!isAuth() || IsCustomer() ? (
                         <Button type={"button"}
                             onClick={() => {
-                                const rentalFields = {
-                                    fromAgency: city,
-                                    agencyUuid: uuid,
+                                const fromAgencyProp = {
+                                    address: address,
+                                    city: city,
+                                    uuid: uuid,
                                 }
 
-                                goTo('/cars/search-result', {state: rentalFields})
+                                goTo('/', {state: fromAgencyProp})
                             }}
                         >
                             Voir les voitures disponibles

@@ -44,6 +44,7 @@ const RentalProcess = () => {
         if(!isAuth()) {
             alert('Créer un compte et revenez...')
         } else {
+            alert(formData.contract)
             if(
                 formData.car && formData.fromAgency && formData.fromDate && formData.fromTime
                 && formData.contract && formData.toDate && formData.toTime && formData.mileageKilometers
@@ -112,7 +113,7 @@ const RentalProcess = () => {
                                 />
                             </div>
                             <div>
-                                <Select label="Type de location" onChange={(e) => updateFormData('rentalType', e)} value={formData.rentalType}>
+                                <Select label="Type de location" onChange={(e) => updateFormData('contract', e)} value={formData.contract}>
                                     <Option value={"0"}>Classique</Option>
                                     <Option value={"1"}>Longue durée</Option>
                                 </Select>

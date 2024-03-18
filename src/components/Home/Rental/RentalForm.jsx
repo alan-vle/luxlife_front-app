@@ -24,7 +24,6 @@ function RentalForm({
     toSuggestions: toSuggestionsProp = null
 }) {
     const { formData, setFormData } = useRentalFormContext();
-
     const [fromAgency, setFromAgency] = useState(fromAgencyProp);
     const [contract, setContract] = useState(contractProp);
     const [fromDate, setFromDate] = useState(fromDateProp);
@@ -70,17 +69,15 @@ function RentalForm({
     }
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
-                setFromSuggestions(null);
-                setToSuggestions(null)
-            }
-        };
+        if(null !== fromAgencyProp) {
+            updateFormData('fromAgency', {
+                address: fromAgencyProp.address,
+                city: fromAgencyProp.city,
+                uuid: fromAgencyProp.uuid
+            }, setFromAgency)
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+            submitHandler(new Event("submit"))
+        }
     }, []);
 
     const submitHandler = (e) => {

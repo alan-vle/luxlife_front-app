@@ -35,7 +35,7 @@ function addRental(rentalData) {
             const data = response && response.data;
             let notifyMsg = null;
 
-            if(data.rentalType !== 0) {
+            if(data.rentalType !== 'Draft') {
                 const dateTime = new Date(data.fromDate);
                 const fromDate = dateTime.toISOString().split('T')[0];
                 const fromTime = dateTime.toTimeString().split(' ')[0];
@@ -55,4 +55,11 @@ function addRental(rentalData) {
         .catch(() => errorNotif())
     ;
 }
-export {getAllRentals, getRental, addRental}
+
+function patchRental(rentalUuid, rentalData) {
+    axios.patch(`${apiUrl}/rentals/${rentalUuid}`, rentalData, {headers: defaultHeaders})
+        .then(() => successNotif('Rental modifiée !'))
+        .catch(() => errorNotif())
+    ;
+}
+export {getAllRentals, getRental, addRental, patchRental}

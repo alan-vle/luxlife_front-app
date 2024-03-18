@@ -7,7 +7,9 @@ import RentalForm from "@/components/Home/Rental/RentalForm.jsx";
 import ListOfCars from "@/components/Home/List-of-cars/ListOfCars.jsx";
 import { useState } from "react";
 
-const MainBlock = () => {
+const MainBlock = ({
+    fromAgency = null
+}) => {
     const [content, setContent] = useState('form');
     const [selectedBorder, setSelectedBorder] = useState('form');
     const [autoMarginBottom, setAutoMarginBottom] = useState(null)
@@ -53,7 +55,7 @@ const MainBlock = () => {
                             </div>
                         </CardHeader>
                         <CardBody>
-                            {content === 'form' ? <RentalForm /> : <ListOfCars />}
+                            {content === 'form' ? <RentalForm fromAgency={fromAgency}/> : <ListOfCars />}
                         </CardBody>
                     </Card>
                 </div>
