@@ -43,7 +43,7 @@ const ConfirmEmail = () => {
     const submitHandler = (e) => {
         e.preventDefault()
         e.stopPropagation()
-        console.log(signature)
+
         if(uuid && expires && signature && passwordIsValid && confirmPasswordIsValid) {
             const userData = {
                 plainPassword: password
@@ -60,7 +60,7 @@ const ConfirmEmail = () => {
                 <form onSubmit={submitHandler}>
                     <Card>
                         <CardBody>
-                            <Typography as={"h3"} variant={"h3"} className={"text-bold"}>Créer votre mot de passe</Typography>
+                            <Typography as={"h3"} variant={"h3"} className={"text-black font-extrabold text-[35px]"}>Créer votre mot de passe</Typography>
                             <div className={"flex justify-center flex-col p-2 gap-3 max-w-fit"}>
                                 <div>
                                     <OneFieldPassword

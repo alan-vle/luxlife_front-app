@@ -30,6 +30,7 @@ function Car({
     model,
     contentUrl,
     kilometers,
+    pricePerKilometer,
     status,
     agency,
     uuid,
@@ -38,7 +39,7 @@ function Car({
     const goTo = useNavigate()
 
     const chosenCarHandler = (e) => {
-        if(formIsEmpty) {
+        if(!formData.fromAgency && !formData.rentalType && !formData.fromDate && !formData.fromTime && !formData.toDate && !formData.toTime) {
             errorNotif('Veuillez renseignez les informations de votre location.')
         } else {
             const carData = {
@@ -46,17 +47,20 @@ function Car({
                  model: model,
                  contentUrl: contentUrl,
                  kilometers: kilometers,
+                 pricePerKilometer: pricePerKilometer,
                  status: status,
                  uuid: uuid,
             }
+
             setFormData(prevState => ({
                 ...prevState,
-                ['car']: carData,
+                ['car']: {...carData},
             }));
 
             goTo('/rental-process')
         }
     }
+
     return(
         <div className={"mr-4 shadow flex flex-col col-span-2 p-8 w-96 max-w-96 mb-8"}>
             <div className={"flex justify-center"}>

@@ -9,11 +9,11 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const RegisterService = (registerData, goTo = null) => {
 
-    axios.post(`${apiUrl}/register`, registerData, {headers: goTo ? jsonContentType : defaultHeaders})
-        .then(() => {
+    return axios.post(`${apiUrl}/register`, registerData, {headers: goTo ? jsonContentType : defaultHeaders})
+        .then(response => {
             successNotif('Inscription réussie ! Vérifiez votre email pour vous connecter.')
 
-            goTo && goTo('/login')
+            goTo ? goTo('/login') : response.data.uuid
         })
         .catch(error => {
             const response = error.response

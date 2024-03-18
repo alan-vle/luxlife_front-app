@@ -13,7 +13,7 @@ import {useRentalFormContext} from "@/store/RentalFormContext.jsx";
 function RentalForm({
     fromAgency: fromAgencyProp = null,
     agencyUuid: agencyUuidProp = null,
-    rentalType: rentalTypeProp = null,
+    contract: contractProp = null,
     fromDate: fromDateProp = null,
     fromTime: fromTimeProp = null,
     toAgency: toAgencyProp = null,
@@ -23,11 +23,9 @@ function RentalForm({
     fromSuggestions: fromSuggestionsProp = null,
     toSuggestions: toSuggestionsProp = null
 }) {
-    const { setFormData, displayCars, setDisplayCars, formIsEmpty, setFormIsEmpty } = useRentalFormContext();
-
+    const { formData, setFormData } = useRentalFormContext();
     const [fromAgency, setFromAgency] = useState(fromAgencyProp);
-    const [agencyUuid, setAgencyUuid] = useState(agencyUuidProp);
-    const [rentalType, setRentalType] = useState(rentalTypeProp);
+    const [contract, setContract] = useState(contractProp);
     const [fromDate, setFromDate] = useState(fromDateProp);
     const [fromTime, setFromTime] = useState(fromTimeProp);
     const [toAgency, setToAgency] = useState(toAgencyProp);
@@ -37,24 +35,9 @@ function RentalForm({
     const [returnPlace, setReturnPlace] = useState(returnPlaceProp);
     const [fromSuggestions, setFromSuggestions] = useState(fromSuggestionsProp);
     const [toSuggestions, setToSuggestions] = useState(toSuggestionsProp);
+    const [displayCars, setDisplayCars] = useState(false);
     const suggestionsRef = useRef(null);
     const goTo = useNavigate();
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if(fromAgency) {
-            setDisplayCars(true)
-
-            if(fromAgency && rentalType && fromDate && fromTime && toDate && toTime) {
-                setFormIsEmpty(false)
-            }
-        } else {
-            setDisplayCars(false)
-            errorNotif('Vous devez au moins choisir une agence de départ !')
-        }
-    }
 
     async function inputAgencyHandler(e, type, setter) {
         const agencyValue = e.target.value;
@@ -86,18 +69,28 @@ function RentalForm({
     }
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
-                setFromSuggestions(null);
-                setToSuggestions(null)
-            }
-        };
+        if(null !== fromAgencyProp) {
+            updateFormData('fromAgency', {
+                address: fromAgencyProp.address,
+                city: fromAgencyProp.city,
+                uuid: fromAgencyProp.uuid
+            }, setFromAgency)
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+            submitHandler(new Event("submit"))
+        }
     }, []);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if(fromAgency) {
+            setDisplayCars(true)
+        } else {
+            setDisplayCars(false)
+            errorNotif('Vous devez au moins choisir une agence de départ !')
+        }
+    }
 
     return (
         <>
@@ -114,17 +107,19 @@ function RentalForm({
                                 <List key={index} className={"border border-b-gray"}>
                                     <Button type={"button"} variant={"text"} onClick={() => {
                                         updateFormData('fromAgency', {
+                                            address: fromSuggestion.address,
                                             city: fromSuggestion.city,
                                             uuid: fromSuggestion.uuid
                                         }, setFromAgency)
                                         setFromSuggestions(null)
+                                        setDisplayCars(false)
                                     }}> {fromSuggestion.address} {fromSuggestion.city}</Button>
                                 </List>
                             )) : fromSuggestions && fromSuggestions.length > 0 ? <List className={"border border-b-gray"}>Aucune agence trouvée.</List> : ''}
                         </div>
                     </div>
                     <div>
-                        <Select label="Type de location" onChange={(e) => updateFormData('rentalType', e, setRentalType)}>
+                        <Select label="Type de location" onChange={(e) => updateFormData('contract', e, setContract)}>
                             <Option value={"0"}>Classique</Option>
                             <Option value={"1"}>Longue durée</Option>
                         </Select>
@@ -153,7 +148,7 @@ function RentalForm({
                             label="Date de retour"
                             type={"date"}
                             onChange={(e) => updateFormData('toDate', e.target.value, setToDate)}
-                            value={fromDate && !toDate || fromDate < toDate ? fromDate : toDate}
+                            value={fromDate && !toDate || fromDate > toDate ? fromDate : toDate}
                             min={fromDate ? fromDate : new Date().toISOString().split('T')[0]}
                         />
                     </div>
@@ -186,6 +181,7 @@ function RentalForm({
                                                         errorNotif('Votre agence de retour n\'est pas différente de celle de départ.', 'same-agency')
                                                     } else {
                                                         updateFormData('toAgency', {
+                                                            address: toSuggestion.address,
                                                             city: toSuggestion.city,
                                                             uuid: toSuggestion.uuid
                                                         }, setToAgency)
@@ -208,7 +204,7 @@ function RentalForm({
             </form>
             {displayCars && (
                 <div>
-                    <div className={"mt-8"}><Cars choseMode={true} agency={agencyUuid} formIsEmpty={formIsEmpty}/></div>
+                    <div className={"mt-8"}><Cars choseMode={true} agency={formData.fromAgency.uuid}/></div>
                 </div>
             )}
         </>
